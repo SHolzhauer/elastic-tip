@@ -1,0 +1,20 @@
+{
+  "etip": {
+    "ioc": {
+      "reference": [
+        "https://example.com/"
+      ],
+      "value": "",
+      "type": "",
+      "provider": {
+        "name": "",
+        "creator": "",
+        "reference": ""
+      },
+      "original": "",
+    }
+  },
+  "threat": {},
+  "rule": {},
+  "vulnerability": {}
+}
