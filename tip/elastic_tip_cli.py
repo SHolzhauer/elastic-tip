@@ -29,7 +29,7 @@ Elastic Threat Intelligence Platform
 
     def _run_cli(self):
         try:
-            opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:i:",
+            opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:i:c:",
                                        ["help", "modules=", "es-hosts=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
         except getopt.GetoptError as err:
             print(err)
