@@ -11,6 +11,11 @@ class ElasticTip:
         self.eshosts = []
         self.esuser = None
         self.espass = None
+        self.tls = {
+            "use": True,
+            "cacert": None,
+            "verify": True
+        }
         self._es = None
         self.modules = {
             "URLhaus": {
@@ -32,8 +37,7 @@ class ElasticTip:
         }
 
     def run(self):
-        if not self._es:
-            self._es = Elasticsearch(hosts=self.eshosts)
+        self._build_es_conn()
         self.verify_tip()
         print("Running TIP")
         for module in self.modules:
@@ -53,8 +57,7 @@ class ElasticTip:
 
     def verify_tip(self):
         """Verify the config of the TIP"""
-        if not self._es:
-            self._es = Elasticsearch(hosts=self.eshosts)
+        self._build_es_conn()
         print("Verifying TIP")
         # Get elasticsearch index settings from files
         index_settings = None
@@ -79,6 +82,29 @@ class ElasticTip:
             except Exception as err:
                 print(err)
                 exit()
+
+    def _build_es_conn(self):
+        if not self._es:
+            eshosts = []
+            for host in self.eshosts:
+                host_block = {
+                    'host': host
+                }
+                if not self.tls["use"]:
+                    host_block["use_ssl"] = False
+                else:
+                    host_block["use_ssl"] = True
+
+                if self.tls["cacert"]:
+                    host_block["ca_certs"] = self.tls["cacert"]
+
+                if not self.tls["verify"]:
+                    host_block["verify_certs"] = False
+                    host_block["ssl_show_warn"] = False
+                eshosts.append(host_block)
+            self.eshosts = eshosts
+            self._es = Elasticsearch(hosts=self.eshosts)
+        print(self._es)
 
     def _ingest(self, iocs, mod=""):
         """Ingest IOC's into Elasticsearch"""
