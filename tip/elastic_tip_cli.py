@@ -30,7 +30,7 @@ Elastic Threat Intelligence Platform
     def _run_cli(self):
         try:
             opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:i:c:",
-                                       ["help", "modules=", "es-hosts=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
+                                       ["help", "modules=", "modules-list", "es-hosts=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
         except getopt.GetoptError as err:
             print(err)
             exit(1)
@@ -40,6 +40,15 @@ Elastic Threat Intelligence Platform
         for opt, arg in opts:
             if opt in ["-h", "--help"]:
                 self._run_help()
+                exit()
+            elif opt in ["--modules-list"]:
+                print(self._cli_head)
+                print("IOC Modules:")
+                for mod in self._tip.modules:
+                    spaces = " "
+                    for i in range(0, (20 - len(mod))):
+                        spaces += " "
+                    print("  {}{}{}".format(mod, spaces, self._tip.modules[mod]["ref"]))
                 exit()
             elif opt in ["-m", "--modules"]:
                 if arg == "*":
@@ -121,6 +130,7 @@ Elastic Threat Intelligence Platform
         print("    -e, --es-hosts <value>    Comma seperated list of Elasticsearch hosts to use")
         print("    -u, --user <value>        Username to use for Authentication to ES")
         print("    -p, --passwd <value>      Password to use for Authentication to ES")
+        print("    --modules-list            List module names and the reference link")
         print("    -m, --modules <values>    Modules to enable:")
         tip = ElasticTip()
         for mod in tip.modules:

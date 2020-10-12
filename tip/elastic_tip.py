@@ -20,19 +20,23 @@ class ElasticTip:
         self.modules = {
             "URLhaus": {
                 "enabled": False,
-                "class": URLhaus()
+                "class": URLhaus(),
+                "ref": "https://urlhaus.abuse.ch/"
             },
             "MalwareBazaar": {
                 "enabled": False,
-                "class": MalwareBazaar()
+                "class": MalwareBazaar(),
+                "ref": "https://bazaar.abuse.ch/"
             },
             "FeodoTracker": {
                 "enabled": False,
-                "class": FeodoTracker()
+                "class": FeodoTracker(),
+                "ref": "https://feodotracker.abuse.ch/"
             },
             "SSLBlacklist": {
                 "enable": False,
-                "class": SSLBlacklist()
+                "class": SSLBlacklist(),
+                "ref": "https://sslbl.abuse.ch/"
             }
         }
 
