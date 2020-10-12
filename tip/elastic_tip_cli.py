@@ -9,9 +9,14 @@ class CLI:
         self._arguments = []
         self._cli_head = """
 Elastic Threat Intelligence Platform
-                   -----------------
-                   community project
-===================================="""
+                            ----------------------
+                                 community project
+==================================================
+"""
+        self._cli_footer = """
+==================================================
+Author   Stijn Holzhauer
+Website  https://github.com/SHolzhauer/elastic-tip"""
         self._tip = None
         self._mod = None
 
@@ -50,6 +55,7 @@ Elastic Threat Intelligence Platform
                         spaces += " "
                     print("  {}{}{}".format(mod, spaces, self._tip.modules[mod]["ref"]))
                 exit()
+                print(self._cli_footer)
             elif opt in ["-m", "--modules"]:
                 if arg == "*":
                     for mod in self._tip.modules:
@@ -116,14 +122,19 @@ Elastic Threat Intelligence Platform
         print("python tip/elastic_tip_cli.py [command] [options]")
         print("")
         print("Commands:")
-        print("    help")
-        print("    run")
-        print("    init")
-        print("    verify")
+        print("    help           Print this help output")
+        print("    run            Run the platform and ingest IOC's into ElasticSearch")
+        print("    init           Initilize for the first time and load the full IOC lists into ElasticSearch")
+        print("    verify         Verify the ElasticSearch index and connection")
+        print(self._cli_footer)
 
     def _run_help(self):
         print(self._cli_head)
         print("python tip/elastic_tip_cli.py run [options]")
+        print("")
+        print("    The run command is used to run the Elastic Threat Intelligence Platform and load")
+        print("    the Threat Intelligence, in the form of Indicators Of Compromise (IOC) into")
+        print("    your ElasticSearch cluster to be used by the build in Detection-Engine")
         print("")
         print("Options")
         print("    -h, --help                Print help output")
@@ -138,6 +149,7 @@ Elastic Threat Intelligence Platform
         print("    -T, --tls                 Use TLS/SSL when connecting to Elasticsearch")
         print("    -c, --ca-cert <value>     Use the cert specified by path")
         print("    --no-verify               Don't verify the TLS/SSL certificate")
+        print(self._cli_footer)
 
     def _verify_help(self):
         print(self._cli_head)
@@ -151,6 +163,7 @@ Elastic Threat Intelligence Platform
         print("    -T, --tls                 Use TLS/SSL when connecting to Elasticsearch")
         print("    -c, --ca-cert <value>     Use the cert specified by path")
         print("    --no-verify               Don't verify the TLS/SSL certificate")
+        print(self._cli_footer)
 
 
 tip_cli = CLI()
