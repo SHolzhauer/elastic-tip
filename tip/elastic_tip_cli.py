@@ -18,62 +18,77 @@ Elastic Threat Intelligence Platform
     def cli(self):
         if argv[1] == "help":
             self._help()
+        elif argv[1] == "run":
+            self._run_cli()
         elif argv[1] == "init":
             pass
         elif argv[1] == "verify":
             pass
-        elif argv[1] == "run":
-            pass
+        else:
+            self._help()
 
     def _run_cli(self):
         try:
-            opts, args = getopt.getopt(argv[2:], "hivrm:e:T", ["help", "init", "verify", "run", "modules=", "eshosts=", "tls="])
+            opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:i:",
+                                       ["help", "modules=", "es-hosts=", "tls", "user", "passwd", "index="])
         except getopt.GetoptError as err:
             print(err)
+            exit(1)
+        else:
+            self._tip = ElasticTip()
+
         for opt, arg in opts:
-            if opt in ["-i", "--init"]:
-                if not self._tip:
-                    self._tip = ElasticTip()
-                self._mod = "init"
-            elif opt in ["-v", "--verify"]:
-                if not self._tip:
-                    self._tip = ElasticTip()
-                self._mod = "verify"
-            elif opt in ["-r", "--run"]:
-                if not self._tip:
-                    self._tip = ElasticTip()
-                self._mod = "run"
+            if opt in ["-h", "--help"]:
+                self._run_help()
             elif opt in ["-m", "--modules"]:
-                if not self._tip:
-                    print("make tip")
-                    self._tip = ElasticTip()
                 for mod in arg.split(","):
                     try:
                         # Enable the module
                         self._tip.modules["{}".format(mod)]["enabled"] = True
                     except KeyError:
                         print("Module {} does not exist".format(mod))
-            elif opt in ["-S", "--tls"]:
-                pass
-            elif opt in ["-e", "--eshosts"]:
-                if not self._tip:
-                    self._tip = ElasticTip()
-                for host in arg.split(","):
-                    self._tip.eshosts.append(host)
+            elif opt in ["-e", "--es-hosts"]:
+                self._tip.eshosts = arg.split(",")
+            elif opt in ["-u", "--user"]:
+                self._tip.esuser = arg
+            elif opt in ["-p", "--passwd"]:
+                self._tip.espass = arg
+            elif opt in ["-i", "--index"]:
+                self._tip.index = arg
 
-        # Run tip if set
-        if self._tip and self._mod is "run":
-            self._tip.run()
-        elif self._tip and self._mod is "init":
-            self._tip.init_tip()
+        self._tip.run()
+
+    def _init_cli(self):
+        pass
+
+    def _verify_cli(self):
+        pass
 
     def _help(self):
         print(self._cli_head)
+        print("python tip/elastic_tip_cli.py [command] [options]")
+        print("")
         print("Commands:")
-        print("  -h, --help")
-        print("  -i, --init")
-        print("  -v, --verify")
-        print("  -r, --run")
+        print("    help")
+        print("    run")
+        print("    init")
+        print("    verify")
+
+    def _run_help(self):
+        print(self._cli_head)
+        print("python tip/elastic_tip_cli.py run [options]")
+        print("")
+        print("Options")
+        print("    -h, --help              Print help output")
+        print("    -e, --es-hosts          Comma seperated list of Elasticseerch hosts to use")
+        print("    -u, --user              Username to use for Authentication to ES")
+        print("    -p, --passwd            Password to use for Authentication to ES")
+        print("    -m, --modules           Modules to enable:")
+        tip = ElasticTip()
+        for mod in tip.modules:
+            print("                                {}".format(mod))
+        print("    -T, --tls               Disable Certificate validation when connecting to Elasticsearch")
+
 
 tip_cli = CLI()
 tip_cli.cli()
