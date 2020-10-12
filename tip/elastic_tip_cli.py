@@ -23,7 +23,7 @@ Elastic Threat Intelligence Platform
         elif argv[1] == "init":
             pass
         elif argv[1] == "verify":
-            pass
+            self._verify_cli()
         else:
             self._help()
 
@@ -40,13 +40,18 @@ Elastic Threat Intelligence Platform
         for opt, arg in opts:
             if opt in ["-h", "--help"]:
                 self._run_help()
+                exit()
             elif opt in ["-m", "--modules"]:
-                for mod in arg.split(","):
-                    try:
-                        # Enable the module
-                        self._tip.modules["{}".format(mod)]["enabled"] = True
-                    except KeyError:
-                        print("Module {} does not exist".format(mod))
+                if arg == "*":
+                    for mod in self._tip.modules:
+                        self._tip.modules[mod]["enabled"] = True
+                else:
+                    for mod in arg.split(","):
+                        try:
+                            # Enable the module
+                            self._tip.modules["{}".format(mod)]["enabled"] = True
+                        except KeyError:
+                            print("Module {} does not exist".format(mod))
             elif opt in ["-e", "--es-hosts"]:
                 self._tip.eshosts = arg.split(",")
             elif opt in ["-u", "--user"]:
@@ -62,7 +67,28 @@ Elastic Threat Intelligence Platform
         pass
 
     def _verify_cli(self):
-        pass
+        try:
+            opts, args = getopt.getopt(argv[2:], "he:Tu:p:i:",
+                                       ["help", "es-hosts=", "tls", "user", "passwd", "index="])
+        except getopt.GetoptError as err:
+            print(err)
+            exit(1)
+        else:
+            self._tip = ElasticTip()
+            for opt, arg in opts:
+                if opt in ["-h", "--help"]:
+                    self._verify_help()
+                    exit()
+                elif opt in ["-e", "--es-hosts"]:
+                    self._tip.eshosts = arg.split(",")
+                elif opt in ["-u", "--user"]:
+                    self._tip.esuser = arg
+                elif opt in ["-p", "--passwd"]:
+                    self._tip.espass = arg
+                elif opt in ["-i", "--index"]:
+                    self._tip.index = arg
+
+            self._tip.verify_tip()
 
     def _help(self):
         print(self._cli_head)
@@ -87,6 +113,17 @@ Elastic Threat Intelligence Platform
         tip = ElasticTip()
         for mod in tip.modules:
             print("                                {}".format(mod))
+        print("    -T, --tls               Disable Certificate validation when connecting to Elasticsearch")
+
+    def _verify_help(self):
+        print(self._cli_head)
+        print("python tip/elastic_tip_cli.py verify [options]")
+        print("")
+        print("Options")
+        print("    -h, --help              Print help output")
+        print("    -e, --es-hosts          Comma seperated list of Elasticseerch hosts to use")
+        print("    -u, --user              Username to use for Authentication to ES")
+        print("    -p, --passwd            Password to use for Authentication to ES")
         print("    -T, --tls               Disable Certificate validation when connecting to Elasticsearch")
 
 

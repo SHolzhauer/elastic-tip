@@ -6,6 +6,7 @@ import hashlib
 class IOC:
 
     def __init__(self, ref=[], value="", type="", pname="", pcreator=None, pref=None, original=None):
+        self.id = None
         self.ioc = {
           "reference": ref,
           "value": value,
@@ -15,11 +16,11 @@ class IOC:
           }
         }
         if pcreator:
-            self.ioc["creator"] = pcreator
+            self.ioc["provider"]["creator"] = pcreator
         if original:
             self.ioc["original"] = original
         if pref:
-            self.ioc["reference"] = pref
+            self.ioc["provider"]["reference"] = pref
         self.threat = None
         self.vulnerability = None
         self.rule = None
@@ -44,7 +45,7 @@ class IOC:
             raise SchemaException("The IOC type field is not one of {}".format(type_accepted))
 
     def _add_docid(self):
-        self.ioc["_doc"] = hashlib.sha1(json.dumps(self.ioc).encode('utf-8')).hexdigest()
+        self.id = hashlib.sha1(json.dumps(self.ioc).encode('utf-8')).hexdigest()
 
 
 class SchemaException(Exception):

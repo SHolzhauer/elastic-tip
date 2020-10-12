@@ -1,0 +1,35 @@
+{
+  "properties": {
+    "reference": {
+      "type": "keyword",
+      "ignore_above": 1024
+    },
+    "value": {
+      "type": "keyword",
+      "ignore_above": 1024
+    },
+    "type": {
+      "type": "keyword",
+      "ignore_above": 1024
+    },
+    "provider": {
+      "properties": {
+        "name": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "creator": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "reference": {
+          "type": "keyword",
+          "ignore_above": 1024
+        }
+      }
+    },
+    "original": {
+      "type": "text"
+    }
+  }
+}
