@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import re
 import hashlib
@@ -46,6 +47,57 @@ class IOC:
 
     def _add_docid(self):
         self.id = hashlib.sha1(json.dumps(self.ioc).encode('utf-8')).hexdigest()
+
+
+class Intel:
+
+    def __init__(self,
+                 original=None,
+                 event_type=None,
+                 event_reference=None,
+                 event_module=None,
+                 event_dataset=None,
+                 threat_first_seen=datetime.now().strftime("%m-%d-%Y %H:%M:%S"),
+                 threat_last_seen=datetime.now().strftime("%m-%d-%Y %H:%M:%S"),
+                 threat_last_update=None,
+                 threat_type=None):
+        """"""
+        self.intel = {
+            "event": {
+                "kind": "enrichment",
+                "category": "threat",
+                "type": event_type,
+                "reference": event_reference,
+                "module": event_module,
+                "dataset": event_dataset,
+                "severity": 0,
+                "risk_score": 0,
+                "original": original
+            },
+            "threat": {
+                "time": {
+                    "first_seen": threat_first_seen,
+                    "last_seen": threat_last_seen,
+                    "last_updated": threat_last_update
+                },
+                "sightings": 0,
+                "type": threat_type
+            }
+        }
+
+    def add_mitre(self, tactic=None, technique=None):
+        """
+
+        :param tactic: Tactic ID e.g TA0002
+        :param technique: Technique ID e.g T1059
+        :return:
+        """
+
+        if tactic or technique:
+            self.intel["threat"]["framework"] = "MITRE ATT&CK"
+
+        if tactic:
+            self.intel["threat"]["tactic"]["id"] = tactic
 
 
 class SchemaException(Exception):
