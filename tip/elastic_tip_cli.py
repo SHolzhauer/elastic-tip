@@ -58,6 +58,8 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
                     for i in range(0, (30 - len(mod))):
                         spaces += " "
                     print("  {}{}{}".format(mod, spaces, self._tip.modules[mod]["ref"]))
+                    if self._tip.modules[mod]["note"]:
+                        print("          {}".format(self._tip.modules[mod]["note"]))
                 exit()
                 print(self._cli_footer)
             elif opt in ["-m", "--modules"]:

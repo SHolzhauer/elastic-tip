@@ -3,6 +3,7 @@ import re
 from abuse_bazaar import URLhaus, MalwareBazaar, FeodoTracker, SSLBlacklist
 from emergingthreats import ETFireWallBlockIps
 from eset import EsetMalwareIOC
+from abuseipdb import AbuseIPDB
 from elasticsearch import Elasticsearch
 
 
@@ -25,32 +26,44 @@ class ElasticTip:
             "URLhaus": {
                 "enabled": False,
                 "class": URLhaus(),
-                "ref": "https://urlhaus.abuse.ch/"
+                "ref": "https://urlhaus.abuse.ch/",
+                "note": None
             },
             "MalwareBazaar": {
                 "enabled": False,
                 "class": MalwareBazaar(),
-                "ref": "https://bazaar.abuse.ch/"
+                "ref": "https://bazaar.abuse.ch/",
+                "note": None
             },
             "FeodoTracker": {
                 "enabled": False,
                 "class": FeodoTracker(),
-                "ref": "https://feodotracker.abuse.ch/"
+                "ref": "https://feodotracker.abuse.ch/",
+                "note": None
             },
             "SSLBlacklist": {
                 "enabled": False,
                 "class": SSLBlacklist(),
-                "ref": "https://sslbl.abuse.ch/"
+                "ref": "https://sslbl.abuse.ch/",
+                "note": None
             },
             "EmergingThreats-Blocklist": {
                 "enabled": False,
                 "class": ETFireWallBlockIps(),
-                "ref": "https://rules.emergingthreats.net/"
+                "ref": "https://rules.emergingthreats.net/",
+                "note": None
             },
             "ESET-MalwareIOC": {
                 "enabled": False,
                 "class": EsetMalwareIOC(),
-                "ref": "https://github.com/eset/malware-ioc"
+                "ref": "https://github.com/eset/malware-ioc",
+                "note": None
+            },
+            "AbuseIPdb": {
+                "enabled": False,
+                "class": AbuseIPDB(),
+                "ref": "https://www.abuseipdb.com/",
+                "note": "AbuseIPdb requires an API key to work, this can be set through the 'ABUSE_IP_KEY' environment variable or will be requested upon runtime"
             }
         }
 
@@ -65,7 +78,8 @@ class ElasticTip:
                 try:
                     self._ingest(mod.iocs, module)
                 except AttributeError:
-                    self._ingest(mod.intel, module, True)
+                    if len(mod.intel) > 0:
+                        self._ingest(mod.intel, module, True)
         self._es.indices.refresh(index=self.index)
         print("Ingested a total of {} IOC's".format(self._total_count))
 
