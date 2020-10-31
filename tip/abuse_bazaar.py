@@ -1,4 +1,4 @@
-from ioc import IOC
+from ioc import IOC, Intel
 import requests
 import hashlib
 from time import time
@@ -8,7 +8,7 @@ class URLhaus:
 
     def __init__(self):
         self._raw_threat_intel = None
-        self.iocs = []
+        self.intel = []
         self._retrieved = None
         self._feed_url = "https://urlhaus.abuse.ch/downloads/csv_recent/"
 
@@ -29,18 +29,22 @@ class URLhaus:
             else:
                 split_line = line.split('","')
                 try:
-                    ioc = IOC(
-                        ref=[split_line[6], self._feed_url],
-                        value=split_line[2],
-                        type="domain",
-                        pname="URLhaus",
-                        pcreator=split_line[7].strip('\r').strip('"'),
-                        original=line
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_module="Abuse.ch",
+                        event_dataset="URLhaus",
+                        threat_first_seen=line[1],
+                        threat_last_seen=None,
+                        threat_type="domain"
                     )
+                    intel.intel["threat"]["url"] = {}
+                    intel.intel["threat"]["url"]["full"] = split_line[2]
                 except IndexError:
                     pass
                 else:
-                    self.iocs.append(ioc)
+                    self.intel.append(intel)
 
 
 class MalwareBazaar:
@@ -117,7 +121,7 @@ class FeodoTracker:
 
     def __init__(self):
         self._raw_threat_intel = None
-        self.iocs = []
+        self.intel = []
         self._retrieved = None
         self._feed_url = "https://feodotracker.abuse.ch/downloads/ipblocklist.csv"
 
@@ -138,17 +142,21 @@ class FeodoTracker:
             else:
                 split_line = line.split(",")
                 try:
-                    ioc = IOC(
-                        ref=[self._feed_url],
-                        value=split_line[1],
-                        type="ip",
-                        pname="FeodoTracker",
-                        original=line
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_module="Abuse.ch",
+                        event_dataset="FeodoTracker",
+                        threat_first_seen=line[0],
+                        threat_last_seen=line[3],
+                        threat_type="ip_address"
                     )
+                    intel.intel["threat"]["ip"] = line[1]
                 except IndexError as err:
                     pass
                 else:
-                    self.iocs.append(ioc)
+                    self.intel.append(intel)
 
 
 class SSLBlacklist:
