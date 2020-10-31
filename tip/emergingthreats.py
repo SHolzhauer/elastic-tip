@@ -25,7 +25,6 @@ class ETFireWallBlockIps:
             if line[:1] is "#" or len(line) < 2:
                 pass
             else:
-                print(line)
                 try:
                     if "/" in line:
                         type = "ip_range"
