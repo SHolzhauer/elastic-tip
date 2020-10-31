@@ -1,6 +1,8 @@
 import json
 import re
 from abuse_bazaar import URLhaus, MalwareBazaar, FeodoTracker, SSLBlacklist
+from emergingthreats import ETFireWallBlockIps
+from eset import EsetMalwareIOC
 from elasticsearch import Elasticsearch
 
 
@@ -34,9 +36,19 @@ class ElasticTip:
                 "ref": "https://feodotracker.abuse.ch/"
             },
             "SSLBlacklist": {
-                "enable": False,
+                "enabled": False,
                 "class": SSLBlacklist(),
                 "ref": "https://sslbl.abuse.ch/"
+            },
+            "EmergingThreats-Blocklist": {
+                "enabled": False,
+                "class": ETFireWallBlockIps(),
+                "ref": "https://rules.emergingthreats.net/"
+            },
+            "ESET-MalwareIOC": {
+                "enabled": False,
+                "class": EsetMalwareIOC(),
+                "ref": "https://github.com/eset/malware-ioc"
             }
         }
 
@@ -48,7 +60,10 @@ class ElasticTip:
             if self.modules[module]["enabled"]:
                 mod = self.modules[module]["class"]
                 mod.run()
-                self._ingest(mod.iocs, module)
+                try:
+                    self._ingest(mod.iocs, module)
+                except AttributeError:
+                    self._ingest(mod.intel, module, True)
         self._es.indices.refresh(index=self.index)
 
     def init_tip(self):
@@ -110,7 +125,7 @@ class ElasticTip:
             self._es = Elasticsearch(hosts=self.eshosts)
         print(self._es)
 
-    def _ingest(self, iocs, mod=""):
+    def _ingest(self, iocs, mod="", intel=False):
         """Ingest IOC's into Elasticsearch"""
         tens_of_thousands = "(^[1-9]*0{4,}$|^[0-9]{2,}0{3,}$)"
 
@@ -118,7 +133,10 @@ class ElasticTip:
         bulk_body = ""
         for ioc in iocs:
             bulk_body += "{ \"update\" : { \"_index\" : \"elastic-tip\", \"_id\" : \"%s\" } }\n" % ioc.id
-            bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.ioc)
+            if intel:
+                bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.intel)
+            else:
+                bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.ioc)
 
             # Do a bulk update for every 10'th of thousands
             if re.match(tens_of_thousands, str(iocs.index(ioc))):

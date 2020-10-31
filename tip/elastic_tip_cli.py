@@ -55,7 +55,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
                 print("IOC Modules:")
                 for mod in self._tip.modules:
                     spaces = " "
-                    for i in range(0, (20 - len(mod))):
+                    for i in range(0, (30 - len(mod))):
                         spaces += " "
                     print("  {}{}{}".format(mod, spaces, self._tip.modules[mod]["ref"]))
                 exit()
@@ -150,7 +150,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         print("    -u, --user <value>        Username to use for Authentication to ES")
         print("    -p, --passwd <value>      Password to use for Authentication to ES")
         print("    --modules-list            List module names and the reference link")
-        print("    -m, --modules <values>    Modules to enable:")
+        print("    -m, --modules <values>    Modules to enable (* for all):")
         tip = ElasticTip()
         for mod in tip.modules:
             print("                                  {}".format(mod))

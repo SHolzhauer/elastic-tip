@@ -61,7 +61,19 @@ class Intel:
                  threat_last_seen=datetime.now().strftime("%m-%d-%Y %H:%M:%S"),
                  threat_last_update=None,
                  threat_type=None):
-        """"""
+        """
+
+        :param original: original intel in its original format
+        :param event_type: Type of event (indicator)
+        :param event_reference:
+        :param event_module:
+        :param event_dataset:
+        :param threat_first_seen:
+        :param threat_last_seen:
+        :param threat_last_update:
+        :param threat_type:
+        """
+        self.id = None
         self.intel = {
             "event": {
                 "kind": "enrichment",
@@ -101,6 +113,10 @@ class Intel:
 
         if technique:
             self.intel["threat"]["technique"]["id"] = tactic
+
+    def _add_docid(self):
+        self.id = hashlib.sha1(json.dumps(self.intel).encode('utf-8')).hexdigest()
+        self.intel["event"]["hash"] = self.id
 
 
 class SchemaException(Exception):
