@@ -30,6 +30,80 @@
     },
     "original": {
       "type": "text"
+    },
+    "threat": {
+      "properties": {
+        "ip": {
+          "type": "ip"
+        },
+        "type": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "file": {
+          "properties": {
+            "hash": {
+              "properties": {
+                "sha1": {
+                  "type": "keyword",
+                  "ignore_above": 1024
+                },
+                "sha256": {
+                  "type": "keyword",
+                  "ignore_above": 1024
+                },
+                "md5": {
+                  "type": "keyword",
+                  "ignore_above": 1024
+                }
+              }
+            }
+          }
+        },
+        "url": {
+          "properties": {
+            "full": {
+              "type": "keyword",
+              "ignore_above": 1024
+            }
+          }
+        }
+      }
+    },
+    "event": {
+      "properties": {
+        "kind": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "category": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "type": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "reference": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "module": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "dataset": {
+          "type": "keyword",
+          "ignore_above": 1024
+        },
+        "original": {
+          "type": "text"
+        },
+        "hash": {
+          "type": "keyword",
+          "ignore_above": 1024
+        }
+      }
     }
   }
 }

@@ -35,7 +35,7 @@ class URLhaus:
                         event_reference=self._feed_url,
                         event_module="Abuse.ch",
                         event_dataset="URLhaus",
-                        threat_first_seen=line[1],
+                        threat_first_seen=split_line[1],
                         threat_last_seen=None,
                         threat_type="domain"
                     )
@@ -44,6 +44,7 @@ class URLhaus:
                 except IndexError:
                     pass
                 else:
+                    intel._add_docid()
                     self.intel.append(intel)
 
 
@@ -51,7 +52,7 @@ class MalwareBazaar:
 
     def __init__(self):
         self._raw_threat_intel = None
-        self.iocs = []
+        self.intel = []
         self._retrieved = None
         self._feed_url = "https://bazaar.abuse.ch/export/csv/recent/"
 
@@ -70,51 +71,28 @@ class MalwareBazaar:
             if line[:1] is "#":
                 pass
             else:
-                split_line = line.split('", "')
-                # Add SHA256 hashes
                 try:
-                    ioc = IOC(
-                        ref=[self._feed_url],
-                        value=split_line[1],
-                        type="hash",
-                        pname="MalwareBazaar",
-                        pcreator=split_line[4],
-                        original=line
+                    split_line = line.split('", "')
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_module="Abuse.ch",
+                        event_dataset="MalwareBazaar",
+                        threat_first_seen=split_line[0],
+                        threat_last_seen=None,
+                        threat_type="file_hash"
                     )
-                except IndexError as err:
-                    pass
+                    intel.intel["threat"]["file"] = {}
+                    intel.intel["threat"]["file"]["hash"] = {}
+                    intel.intel["threat"]["file"]["hash"]["sha1"] = split_line[3]
+                    intel.intel["threat"]["file"]["hash"]["sha256"] = split_line[1]
+                    intel.intel["threat"]["file"]["hash"]["md5"] = split_line[2]
+                except Exception as err:
+                    print(err)
                 else:
-                    self.iocs.append(ioc)
-
-                # Add MD5 hashes
-                try:
-                    ioc = IOC(
-                        ref=[self._feed_url],
-                        value=split_line[2],
-                        type="hash",
-                        pname="MalwareBazaar",
-                        pcreator=split_line[4],
-                        original=line
-                    )
-                except IndexError as err:
-                    pass
-                else:
-                    self.iocs.append(ioc)
-
-                # Add SHA1 hashes
-                try:
-                    ioc = IOC(
-                        ref=[self._feed_url],
-                        value=split_line[3],
-                        type="hash",
-                        pname="MalwareBazaar",
-                        pcreator=split_line[4],
-                        original=line
-                    )
-                except IndexError as err:
-                    pass
-                else:
-                    self.iocs.append(ioc)
+                    intel._add_docid()
+                    self.intel.append(intel)
 
 
 class FeodoTracker:
@@ -152,10 +130,11 @@ class FeodoTracker:
                         threat_last_seen=line[3],
                         threat_type="ip_address"
                     )
-                    intel.intel["threat"]["ip"] = line[1]
+                    intel.intel["threat"]["ip"] = split_line[1]
                 except IndexError as err:
                     pass
                 else:
+                    intel._add_docid()
                     self.intel.append(intel)
 
 

@@ -20,6 +20,7 @@ class ElasticTip:
             "verify": True
         }
         self._es = None
+        self._total_count = 0
         self.modules = {
             "URLhaus": {
                 "enabled": False,
@@ -66,6 +67,7 @@ class ElasticTip:
                 except AttributeError:
                     self._ingest(mod.intel, module, True)
         self._es.indices.refresh(index=self.index)
+        print("Ingested a total of {} IOC's".format(self._total_count))
 
     def init_tip(self):
         """Initilize the TIP"""
@@ -134,9 +136,10 @@ class ElasticTip:
         tens_of_thousands = "(^[1-9]*0{4,}$|^[0-9]{2,}0{3,}$)"
 
         print("Ingesting {} iocs from {} into {}".format(len(iocs), mod, self.eshosts))
+        self._total_count += len(iocs)
         bulk_body = ""
         for ioc in iocs:
-            bulk_body += "{ \"update\" : { \"_index\" : \"elastic-tip\", \"_id\" : \"%s\" } }\n" % ioc.id
+            bulk_body += "{ \"update\" : { \"_index\" : \"%s\", \"_id\" : \"%s\" } }\n" % (self.index, ioc.id)
             if intel:
                 bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.intel)
             else:
