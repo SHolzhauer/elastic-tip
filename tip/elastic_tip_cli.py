@@ -154,7 +154,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         tip = ElasticTip()
         for mod in tip.modules:
             print("                                  {}".format(mod))
-        print("    -T, --tls                 Use TLS/SSL when connecting to Elasticsearch")
+        print("    -T, --tls                 Do not use TLS/SSL when connecting to Elasticsearch")
         print("    -c, --ca-cert <value>     Use the cert specified by path")
         print("    --no-verify               Don't verify the TLS/SSL certificate")
         print(self._cli_footer)
@@ -168,7 +168,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         print("    -e, --es-hosts <value>    Comma seperated list of Elasticsearch hosts to use")
         print("    -u, --user <value>        Username to use for Authentication to ES")
         print("    -p, --passwd <value>      Password to use for Authentication to ES")
-        print("    -T, --tls                 Use TLS/SSL when connecting to Elasticsearch")
+        print("    -T, --tls                 Do not use TLS/SSL when connecting to Elasticsearch")
         print("    -c, --ca-cert <value>     Use the cert specified by path")
         print("    --no-verify               Don't verify the TLS/SSL certificate")
         print(self._cli_footer)
