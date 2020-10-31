@@ -99,6 +99,9 @@ class Intel:
         if tactic:
             self.intel["threat"]["tactic"]["id"] = tactic
 
+        if technique:
+            self.intel["threat"]["technique"]["id"] = tactic
+
 
 class SchemaException(Exception):
     pass

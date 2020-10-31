@@ -33,6 +33,10 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
             self._help()
 
     def _run_cli(self):
+        if len(argv) < 3:
+            self._run_help()
+            exit()
+
         try:
             opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:i:c:",
                                        ["help", "modules=", "modules-list", "es-hosts=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
@@ -88,6 +92,10 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         pass
 
     def _verify_cli(self):
+        if len(argv) < 3:
+            self._verify_help()
+            exit()
+
         try:
             opts, args = getopt.getopt(argv[2:], "he:Tu:p:i:c:",
                                        ["help", "es-hosts=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
