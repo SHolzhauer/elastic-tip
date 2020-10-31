@@ -85,6 +85,8 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
                 self._tip.tls["cacert"] = arg
             elif opt in ["--no-verify"]:
                 self._tip.tls["verify"] = False
+            elif opt in ["--no-setup"]:
+                self._tip.setup_index = False
 
         self._tip.run()
 
@@ -147,6 +149,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         print("Options")
         print("    -h, --help                Print help output")
         print("    -e, --es-hosts <value>    Comma seperated list of Elasticsearch hosts to use")
+        print("    -i, --index <value>       The index to ingest data into")
         print("    -u, --user <value>        Username to use for Authentication to ES")
         print("    -p, --passwd <value>      Password to use for Authentication to ES")
         print("    --modules-list            List module names and the reference link")
@@ -157,6 +160,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         print("    -T, --tls                 Do not use TLS/SSL when connecting to Elasticsearch")
         print("    -c, --ca-cert <value>     Use the cert specified by path")
         print("    --no-verify               Don't verify the TLS/SSL certificate")
+        print("    --no-setup                Do not add the index mapping and settings to the given index. Only applicable if the index doesn't exist yet.")
         print(self._cli_footer)
 
     def _verify_help(self):
@@ -166,6 +170,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         print("Options")
         print("    -h, --help                Print help output")
         print("    -e, --es-hosts <value>    Comma seperated list of Elasticsearch hosts to use")
+        print("    -i, --index <value>       The index to ingest data into")
         print("    -u, --user <value>        Username to use for Authentication to ES")
         print("    -p, --passwd <value>      Password to use for Authentication to ES")
         print("    -T, --tls                 Do not use TLS/SSL when connecting to Elasticsearch")

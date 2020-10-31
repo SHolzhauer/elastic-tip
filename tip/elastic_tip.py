@@ -13,6 +13,7 @@ class ElasticTip:
         self.eshosts = []
         self.esuser = None
         self.espass = None
+        self.setup_index = True
         self.tls = {
             "use": True,
             "cacert": None,
@@ -90,17 +91,20 @@ class ElasticTip:
             print("Index {} exists".format(self.index))
         else:
             print("Index {} does not exists, creating...".format(self.index))
-            try:
-                self._es.indices.create(
-                    index=self.index,
-                    body={
-                        "settings": index_settings,
-                        "mappings": index_mapping
-                    }
-                )
-            except Exception as err:
-                print(err)
-                exit()
+            if self.setup_index:
+                try:
+                    self._es.indices.create(
+                        index=self.index,
+                        body={
+                            "settings": index_settings,
+                            "mappings": index_mapping
+                        }
+                    )
+                except Exception as err:
+                    print(err)
+                    exit()
+            else:
+                pass
 
     def _build_es_conn(self):
         if not self._es:
