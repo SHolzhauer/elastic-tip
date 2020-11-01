@@ -60,7 +60,8 @@ class Intel:
                  threat_first_seen=datetime.now().strftime("%m-%d-%Y %H:%M:%S"),
                  threat_last_seen=datetime.now().strftime("%m-%d-%Y %H:%M:%S"),
                  threat_last_update=None,
-                 threat_type=None):
+                 threat_type=None,
+                 threat_description=None):
         """
 
         :param original: original intel in its original format
@@ -87,6 +88,7 @@ class Intel:
                 "original": original
             },
             "threat": {
+                "description": threat_description,
                 "time": {
                     "first_seen": threat_first_seen,
                     "last_seen": threat_last_seen,

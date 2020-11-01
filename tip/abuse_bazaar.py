@@ -1,4 +1,4 @@
-from ioc import IOC, Intel
+from ioc import Intel
 import requests
 import hashlib
 from time import time
@@ -37,7 +37,8 @@ class URLhaus:
                         event_dataset="URLhaus",
                         threat_first_seen=split_line[1],
                         threat_last_seen=None,
-                        threat_type="domain"
+                        threat_type="domain",
+                        threat_description=split_line[4]
                     )
                     intel.intel["threat"]["url"] = {}
                     intel.intel["threat"]["url"]["full"] = split_line[2]
@@ -126,9 +127,10 @@ class FeodoTracker:
                         event_reference=self._feed_url,
                         event_module="Abuse.ch",
                         event_dataset="FeodoTracker",
-                        threat_first_seen=line[0],
-                        threat_last_seen=line[3],
-                        threat_type="ip_address"
+                        threat_first_seen=split_line[0],
+                        threat_last_seen=split_line[3],
+                        threat_type="ip_address",
+                        threat_description=split_line[4]
                     )
                     intel.intel["threat"]["ip"] = split_line[1]
                 except IndexError as err:
@@ -142,7 +144,7 @@ class SSLBlacklist:
 
     def __init__(self):
         self._raw_threat_intel = None
-        self.iocs = []
+        self.intel = []
         self._retrieved = None
         self._feed_url = "https://sslbl.abuse.ch/blacklist/sslblacklist.csv"
 
@@ -163,14 +165,22 @@ class SSLBlacklist:
             else:
                 split_line = line.split(",")
                 try:
-                    ioc = IOC(
-                        ref=[self._feed_url],
-                        value=split_line[1],
-                        type="hash",
-                        pname="SSLBlacklist",
-                        original=line
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_module="Abuse.ch",
+                        event_dataset="SSLBlackList",
+                        threat_first_seen=split_line[0],
+                        threat_last_seen=None,
+                        threat_type="ssl_hash",
+                        threat_description=split_line[2]
                     )
+                    intel.intel["threat"]["server"] = {}
+                    intel.intel["threat"]["server"]["hash"] = {}
+                    intel.intel["threat"]["server"]["hash"]["sha1"] = split_line[1]
                 except IndexError as err:
                     pass
                 else:
-                    self.iocs.append(ioc)
+                    intel._add_docid()
+                    self.intel.append(intel)
