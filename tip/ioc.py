@@ -66,13 +66,14 @@ class Intel:
 
         :param original: original intel in its original format
         :param event_type: Type of event (indicator)
-        :param event_reference:
-        :param event_module:
-        :param event_dataset:
-        :param threat_first_seen:
-        :param threat_last_seen:
-        :param threat_last_update:
-        :param threat_type:
+        :param event_reference: url which provides context
+        :param event_module: event.module field
+        :param event_dataset: event.dataset field
+        :param threat_first_seen: date at which the threat was first seen or added
+        :param threat_last_seen: date at which the threat was last seen to be active
+        :param threat_last_update: date at which the intell has last been updated
+        :param threat_type: threat.type field
+        :param threat_description: description field to provide context on the intel
         """
         self.id = None
         self.intel = {
