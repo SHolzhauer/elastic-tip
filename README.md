@@ -69,4 +69,18 @@ Options
 Author   Stijn Holzhauer
 Website  https://github.com/SHolzhauer/elastic-tip
 ```
- 
+
+## Feeds
+Elastic-TIP supports multiple threat intelligence feeds, it currently supports:
+
+_for the exact feed url's look at the `event.reference` field_
+
+| Module name | name | url | note |
+|-------------|------|-----|------|
+| URLhaus | Abuse.ch URLhaus | https://urlhaus.abuse.ch/ | |
+| MalwareBazaar | Abuse.ch MalwareBazaar | https://bazaar.abuse.ch/ | |
+| FeodoTracker | Abuse.ch FeodoTracker | https://feodotracker.abuse.ch/ | |
+| SSLBlacklist | Abuse.ch SSLBlacklist | https://sslbl.abuse.ch/ | |
+| EmergingThreats-Blocklist | Emerging Threats | https://rules.emergingthreats.net/ | This is just the firewall blocklist |
+| ESET-MalwareIOC | ESET malwareIOC repo | https://github.com/eset/malware-ioc | |
+| AbuseIPdb | AbuseIPdb | https://www.abuseipdb.com/ | Only 10.000 results, API key is required. |
