@@ -89,14 +89,16 @@ class Intel:
                 "original": original
             },
             "threat": {
-                "description": threat_description,
-                "time": {
-                    "first_seen": threat_first_seen,
-                    "last_seen": threat_last_seen,
-                    "last_updated": threat_last_update
+                "ioc": {
+                    "time_first_seen": threat_first_seen,
+                    "time_last_seen": threat_last_seen,
+                    "sightings": 0,
+                    "description": threat_description,
+                    "classification": threat_type,
                 },
-                "sightings": 0,
-                "type": threat_type
+                "tactic": {},
+                "technique": {}
+
             }
         }
 
