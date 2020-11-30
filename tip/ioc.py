@@ -119,7 +119,7 @@ class Intel:
         if technique:
             self.intel["threat"]["technique"]["id"] = tactic
 
-    def _add_docid(self):
+    def add_docid(self):
         self.id = hashlib.sha1(json.dumps(self.intel).encode('utf-8')).hexdigest()
         self.intel["event"]["hash"] = self.id
 
