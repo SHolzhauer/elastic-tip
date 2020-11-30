@@ -13,6 +13,7 @@ class ElasticTip:
     def __init__(self):
         self.index = "elastic-tip"
         self.eshosts = []
+        self.esport = 9200
         self.esuser = None
         self.espass = None
         self.setup_index = True
@@ -144,9 +145,14 @@ class ElasticTip:
     def _build_es_conn(self):
         if not self._es:
             eshosts = []
-            for host in self.eshosts:
+            for hoststring in self.eshosts:
+
+                # Determine host and port
+                host, port = self._parse_hosts(hoststring)
+
                 host_block = {
-                    'host': host
+                    'host': host,
+                    'port': port
                 }
                 if not self.tls["use"]:
                     host_block["use_ssl"] = False
@@ -163,6 +169,21 @@ class ElasticTip:
             self.eshosts = eshosts
             self._es = Elasticsearch(hosts=self.eshosts)
         print(self._es)
+
+    def _parse_hosts(self, hoststring):
+        """Parse a host string to determine host and port"""
+        host = port = None
+        if ":" in hoststring:
+            arr = hoststring.split(":")
+            if len(arr) > 2:
+                raise IndexError("es hosts is malformed")
+            host = arr[0]
+            port = int(float(arr[1]))
+        else:
+            host = hoststring
+            port = self.esport
+
+        return host, port
 
     def _ingest(self, iocs, mod="", intel=False):
         """Ingest IOC's into Elasticsearch"""
