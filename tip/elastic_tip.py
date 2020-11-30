@@ -5,6 +5,7 @@ from emergingthreats import ETFireWallBlockIps
 from eset import EsetMalwareIOC
 from abuseipdb import AbuseIPDB
 from elasticsearch import Elasticsearch
+from spamhaus import SpamhausDrop, SpamhausExtendedDrop, SpamhausDropIpv6, SpamhausASNDrop
 
 
 class ElasticTip:
@@ -64,6 +65,24 @@ class ElasticTip:
                 "class": AbuseIPDB(),
                 "ref": "https://www.abuseipdb.com/",
                 "note": "AbuseIPdb requires an API key to work, this can be set through the 'ABUSE_IP_KEY' environment variable or will be requested upon runtime"
+            },
+            "Spamhaus-Drop": {
+                "enabled": False,
+                "class": SpamhausDrop(),
+                "ref": "https://www.spamhaus.org/drop/",
+                "note": None
+            },
+            "Spamhaus-ExtendedDrop": {
+                "enabled": False,
+                "class": SpamhausExtendedDrop(),
+                "ref": "https://www.spamhaus.org/drop/",
+                "note": None
+            },
+            "Spamhaus-IPv6Drop": {
+                "enabled": False,
+                "class": SpamhausDropIpv6(),
+                "ref": "https://www.spamhaus.org/drop/",
+                "note": None
             }
         }
 
