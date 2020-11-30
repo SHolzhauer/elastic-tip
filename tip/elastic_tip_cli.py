@@ -38,8 +38,8 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
             exit()
 
         try:
-            opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:i:c:",
-                                       ["help", "modules=", "modules-list", "es-hosts=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
+            opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:P:i:c:",
+                                       ["help", "modules=", "modules-list", "es-hosts=", "es-port=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
         except getopt.GetoptError as err:
             print(err)
             exit(1)
@@ -74,7 +74,15 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
                         except KeyError:
                             print("Module {} does not exist".format(mod))
             elif opt in ["-e", "--es-hosts"]:
-                self._tip.eshosts = arg.split(",")
+                hosts = arg.split(",")
+                for host in hosts:
+                    if "://" in host:
+                        parsedhost = host.split("://")[1]
+                    else:
+                        parsedhost = host
+                    self._tip.eshosts.append(parsedhost)
+            elif opt in ["-P", "--es-port"]:
+                self._tip.esport = int(float(arg))
             elif opt in ["-u", "--user"]:
                 self._tip.esuser = arg
             elif opt in ["-p", "--passwd"]:
@@ -101,8 +109,8 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
             exit()
 
         try:
-            opts, args = getopt.getopt(argv[2:], "he:Tu:p:i:c:",
-                                       ["help", "es-hosts=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
+            opts, args = getopt.getopt(argv[2:], "he:Tu:P:p:i:c:",
+                                       ["help", "es-hosts=", "es-port=" "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
         except getopt.GetoptError as err:
             print(err)
             exit(1)
@@ -113,7 +121,15 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
                     self._verify_help()
                     exit()
                 elif opt in ["-e", "--es-hosts"]:
-                    self._tip.eshosts = arg.split(",")
+                    hosts = arg.split(",")
+                    for host in hosts:
+                        if "://" in host:
+                            parsedhost = host.split("://")[1]
+                        else:
+                            parsedhost = host
+                        self._tip.eshosts.append(parsedhost)
+                elif opt in ["-P", "--es-port"]:
+                    self._tip.esport = int(float(arg))
                 elif opt in ["-u", "--user"]:
                     self._tip.esuser = arg
                 elif opt in ["-p", "--passwd"]:
@@ -151,6 +167,10 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         print("Options")
         print("    -h, --help                Print help output")
         print("    -e, --es-hosts <value>    Comma seperated list of Elasticsearch hosts to use")
+        print("                              E.G:"
+              "                                  localhost,127.0.0.2"
+              "                                  my-es.com:9300")
+        print("    -P, --es-port <value>     Port to use when connecting to Elasticsearch hosts")
         print("    -i, --index <value>       The index to ingest data into")
         print("    -u, --user <value>        Username to use for Authentication to ES")
         print("    -p, --passwd <value>      Password to use for Authentication to ES")
