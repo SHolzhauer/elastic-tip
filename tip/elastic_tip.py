@@ -5,7 +5,7 @@ from emergingthreats import ETFireWallBlockIps
 from eset import EsetMalwareIOC
 from abuseipdb import AbuseIPDB
 from elasticsearch import Elasticsearch
-from spamhaus import SpamhausDrop, SpamhausExtendedDrop, SpamhausDropIpv6, SpamhausASNDrop
+from spamhaus import SpamhausDrop, SpamhausExtendedDrop, SpamhausDropIpv6
 
 
 class ElasticTip:
