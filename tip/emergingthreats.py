@@ -41,9 +41,9 @@ class ETFireWallBlockIps:
                         threat_last_seen=None,
                         threat_type=type
                     )
-                    intel.intel["threat"]["ip"] = line
+                    intel.intel["threat"]["ioc"]["ip"] = line
                 except Exception:
                     pass
                 else:
-                    intel._add_docid()
+                    intel.add_docid()
                     self.intel.append(intel)

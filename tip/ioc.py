@@ -26,7 +26,7 @@ class IOC:
         self.vulnerability = None
         self.rule = None
         self._validate()
-        self._add_docid()
+        self.add_docid()
 
     def _validate(self):
         """Validate the ioc holds to the schema"""
@@ -45,7 +45,7 @@ class IOC:
         if self.ioc["type"] not in type_accepted:
             raise SchemaException("The IOC type field is not one of {}".format(type_accepted))
 
-    def _add_docid(self):
+    def add_docid(self):
         self.id = hashlib.sha1(json.dumps(self.ioc).encode('utf-8')).hexdigest()
 
 

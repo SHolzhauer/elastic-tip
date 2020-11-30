@@ -59,9 +59,9 @@ class AbuseIPDB:
                     threat_last_seen=obj["lastReportedAt"],
                     threat_type="ip_address"
                 )
-                intel.intel["threat"]["ip"] = obj["ipAddress"]
+                intel.intel["threat"]["ioc"]["ip"] = obj["ipAddress"]
             except Exception:
                 pass
             else:
-                intel._add_docid()
+                intel.add_docid()
                 self.intel.append(intel)

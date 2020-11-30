@@ -45,7 +45,7 @@ class URLhaus:
                 except IndexError:
                     pass
                 else:
-                    intel._add_docid()
+                    intel.add_docid()
                     self.intel.append(intel)
 
 
@@ -84,15 +84,15 @@ class MalwareBazaar:
                         threat_last_seen=None,
                         threat_type="file_hash"
                     )
-                    intel.intel["threat"]["file"] = {}
-                    intel.intel["threat"]["file"]["hash"] = {}
-                    intel.intel["threat"]["file"]["hash"]["sha1"] = split_line[3]
-                    intel.intel["threat"]["file"]["hash"]["sha256"] = split_line[1]
-                    intel.intel["threat"]["file"]["hash"]["md5"] = split_line[2]
+                    intel.intel["threat"]["ioc"]["file"] = {}
+                    intel.intel["threat"]["ioc"]["file"]["hash"] = {}
+                    intel.intel["threat"]["ioc"]["file"]["hash"]["sha1"] = split_line[3]
+                    intel.intel["threat"]["ioc"]["file"]["hash"]["sha256"] = split_line[1]
+                    intel.intel["threat"]["ioc"]["file"]["hash"]["md5"] = split_line[2]
                 except Exception as err:
                     print(err)
                 else:
-                    intel._add_docid()
+                    intel.add_docid()
                     self.intel.append(intel)
 
 
@@ -136,7 +136,7 @@ class FeodoTracker:
                 except IndexError as err:
                     pass
                 else:
-                    intel._add_docid()
+                    intel.add_docid()
                     self.intel.append(intel)
 
 
@@ -176,9 +176,9 @@ class SSLBlacklist:
                         threat_type="ssl_hash",
                         threat_description=split_line[2]
                     )
-                    intel.intel["threat"]["server"] = {}
-                    intel.intel["threat"]["server"]["hash"] = {}
-                    intel.intel["threat"]["server"]["hash"]["sha1"] = split_line[1]
+                    intel.intel["threat"]["ioc"]["server"] = {}
+                    intel.intel["threat"]["ioc"]["server"]["hash"] = {}
+                    intel.intel["threat"]["ioc"]["server"]["hash"]["sha1"] = split_line[1]
                     if "C&C" in intel.intel["threat"]["description"]:
                         intel.add_mitre("TA0011")
                     elif "" in intel.intel["threat"]["description"]:
@@ -186,5 +186,5 @@ class SSLBlacklist:
                 except IndexError as err:
                     pass
                 else:
-                    intel._add_docid()
+                    intel.add_docid()
                     self.intel.append(intel)
