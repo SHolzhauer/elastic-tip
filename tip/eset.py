@@ -44,7 +44,7 @@ class EsetMalwareIOC:
                                 original=line,
                                 event_type="indicator",
                                 event_reference=self._feed_url,
-                                event_module="Eset",
+                                event_provider="Eset",
                                 event_dataset="malware-ioc",
                                 threat_first_seen=None,
                                 threat_last_seen=None,

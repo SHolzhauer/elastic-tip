@@ -35,7 +35,7 @@ class ETFireWallBlockIps:
                         original=line,
                         event_type="indicator",
                         event_reference=self._feed_url,
-                        event_module="EmergingThreats",
+                        event_provider="EmergingThreats",
                         event_dataset="fwrules/emerging-Block-IPs",
                         threat_first_seen=None,
                         threat_last_seen=None,

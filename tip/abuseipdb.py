@@ -53,7 +53,7 @@ class AbuseIPDB:
                     original=json.dumps(obj),
                     event_type="indicator",
                     event_reference=self._feed_url,
-                    event_module="AbuseIPdb",
+                    event_provider="AbuseIPdb",
                     event_dataset="blacklist",
                     threat_first_seen=None,
                     threat_last_seen=obj["lastReportedAt"],
