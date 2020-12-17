@@ -59,7 +59,9 @@ class AbuseIPDB:
                     threat_last_seen=obj["lastReportedAt"],
                     threat_type="ip_address"
                 )
-                intel.intel["threat"]["ioc"]["ip"] = obj["ipAddress"]
+                intel.intel["threat"]["type"] = "IPV4"
+                intel.intel["source"]["ip"] = obj["ipAddress"]
+                intel.intel["destination"]["ip"] = obj["ipAddress"]
             except Exception:
                 pass
             else:

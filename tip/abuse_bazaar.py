@@ -132,7 +132,9 @@ class FeodoTracker:
                         threat_type="ip_address",
                         threat_description=split_line[4]
                     )
-                    intel.intel["threat"]["ip"] = split_line[1]
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"]["ip"] = split_line[1]
+                    intel.intel["destination"]["ip"] = split_line[1]
                 except IndexError as err:
                     pass
                 else:
@@ -176,9 +178,10 @@ class SSLBlacklist:
                         threat_type="ssl_hash",
                         threat_description=split_line[2]
                     )
-                    intel.intel["threat"]["ioc"]["server"] = {}
-                    intel.intel["threat"]["ioc"]["server"]["hash"] = {}
-                    intel.intel["threat"]["ioc"]["server"]["hash"]["sha1"] = split_line[1]
+                    intel.intel["threat"]["type"] = "Hash"
+                    intel.intel["tls"]["server"] = {}
+                    intel.intel["tls"]["server"]["hash"] = {}
+                    intel.intel["tls"]["server"]["hash"]["sha1"] = split_line[1]
                     if "C&C" in intel.intel["threat"]["description"]:
                         intel.add_mitre("TA0011")
                     elif "" in intel.intel["threat"]["description"]:

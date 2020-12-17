@@ -39,7 +39,9 @@ class SpamhausDrop:
                         threat_type="domain",
                         threat_description=split_line[1]
                     )
-                    intel.intel["threat"]["ioc"]["ip"] = split_line[0]
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"]["ip"] = split_line[0]
+                    intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
                     pass
                 else:
@@ -83,7 +85,9 @@ class SpamhausExtendedDrop:
                         threat_type="domain",
                         threat_description=split_line[1]
                     )
-                    intel.intel["threat"]["ioc"]["ip"] = split_line[0]
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"]["ip"] = split_line[0]
+                    intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
                     pass
                 else:
@@ -127,7 +131,9 @@ class SpamhausDropIpv6:
                         threat_type="domain",
                         threat_description=split_line[1]
                     )
-                    intel.intel["threat"]["ioc"]["ip"] = split_line[0]
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"]["ip"] = split_line[0]
+                    intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
                     pass
                 else:

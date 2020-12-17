@@ -90,11 +90,11 @@ class Intel:
             },
             "threat": {
                 "ioc": {
-                    "time_first_seen": threat_first_seen,
-                    "time_last_seen": threat_last_seen,
+                    "first_seen": threat_first_seen,
+                    "last_seen": threat_last_seen,
                     "sightings": 0,
+                    "type": "unknown",
                     "description": threat_description,
-                    "classification": threat_type,
                 },
                 "tactic": {},
                 "technique": {}
