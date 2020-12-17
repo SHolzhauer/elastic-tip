@@ -39,7 +39,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
 
         try:
             opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:P:i:c:",
-                                       ["help", "modules=", "modules-list", "es-hosts=", "es-port=", "tls", "user", "passwd", "index=", "ca-cert=", "no-verify"])
+                                       ["help", "modules=", "modules-list", "es-hosts=", "es-port=", "tls", "user=", "passwd=", "index=", "ca-cert=", "no-verify"])
         except getopt.GetoptError as err:
             print(err)
             exit(1)

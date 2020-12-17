@@ -167,8 +167,11 @@ class ElasticTip:
                     host_block["ssl_show_warn"] = False
                 eshosts.append(host_block)
             self.eshosts = eshosts
-            self._es = Elasticsearch(hosts=self.eshosts)
-        print(self._es)
+            if self.esuser:
+                self._es = Elasticsearch(hosts=self.eshosts, http_auth=(self.esuser, self.espass))
+            else:
+                self._es = Elasticsearch(hosts=self.eshosts)
+        print("Connection: {}".format(self._es))
 
     def _parse_hosts(self, hoststring):
         """Parse a host string to determine host and port"""
