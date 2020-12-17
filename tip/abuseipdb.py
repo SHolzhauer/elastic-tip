@@ -60,6 +60,8 @@ class AbuseIPDB:
                     threat_type="ip_address"
                 )
                 intel.intel["threat"]["type"] = "IPV4"
+                intel.intel["source"] = {}
+                intel.intel["destination"] = {}
                 intel.intel["source"]["ip"] = obj["ipAddress"]
                 intel.intel["destination"]["ip"] = obj["ipAddress"]
             except Exception:

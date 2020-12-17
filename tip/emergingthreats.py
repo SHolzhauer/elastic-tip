@@ -42,6 +42,8 @@ class ETFireWallBlockIps:
                         threat_type=type
                     )
                     intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"] = {}
+                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = line
                     intel.intel["destination"]["ip"] = line
                 except Exception:

@@ -135,6 +135,8 @@ class FeodoTracker:
                         threat_description=split_line[4]
                     )
                     intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"] = {}
+                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = split_line[1]
                     intel.intel["destination"]["ip"] = split_line[1]
                 except IndexError as err:
@@ -181,6 +183,7 @@ class SSLBlacklist:
                         threat_description=split_line[2]
                     )
                     intel.intel["threat"]["type"] = "Hash"
+                    intel.intel["tls"] = {}
                     intel.intel["tls"]["server"] = {}
                     intel.intel["tls"]["server"]["hash"] = {}
                     intel.intel["tls"]["server"]["hash"]["sha1"] = split_line[1]

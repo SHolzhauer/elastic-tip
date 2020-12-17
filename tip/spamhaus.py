@@ -40,6 +40,8 @@ class SpamhausDrop:
                         threat_description=split_line[1]
                     )
                     intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"] = {}
+                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = split_line[0]
                     intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
@@ -86,6 +88,8 @@ class SpamhausExtendedDrop:
                         threat_description=split_line[1]
                     )
                     intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"] = {}
+                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = split_line[0]
                     intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
@@ -132,6 +136,8 @@ class SpamhausDropIpv6:
                         threat_description=split_line[1]
                     )
                     intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["source"] = {}
+                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = split_line[0]
                     intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
