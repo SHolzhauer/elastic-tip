@@ -187,9 +187,9 @@ class SSLBlacklist:
                     intel.intel["tls"]["server"] = {}
                     intel.intel["tls"]["server"]["hash"] = {}
                     intel.intel["tls"]["server"]["hash"]["sha1"] = split_line[1]
-                    if "C&C" in intel.intel["threat"]["description"]:
+                    if "C&C" in intel.intel["threat"]["ioc"]["description"]:
                         intel.add_mitre("TA0011")
-                    elif "" in intel.intel["threat"]["description"]:
+                    elif "" in intel.intel["threat"]["ioc"]["description"]:
                         intel.add_mitre("TA0042", "T1588.001")
                 except IndexError as err:
                     pass
