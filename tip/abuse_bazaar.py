@@ -40,8 +40,9 @@ class URLhaus:
                         threat_type="domain",
                         threat_description=split_line[4]
                     )
-                    intel.intel["threat"]["url"] = {}
-                    intel.intel["threat"]["url"]["full"] = split_line[2]
+                    intel.intel["threat"]["type"] = "URL"
+                    intel.intel["url"] = {}
+                    intel.intel["url"]["full"] = split_line[2]
                 except IndexError:
                     pass
                 else:
@@ -84,11 +85,12 @@ class MalwareBazaar:
                         threat_last_seen=None,
                         threat_type="file_hash"
                     )
-                    intel.intel["threat"]["ioc"]["file"] = {}
-                    intel.intel["threat"]["ioc"]["file"]["hash"] = {}
-                    intel.intel["threat"]["ioc"]["file"]["hash"]["sha1"] = split_line[3]
-                    intel.intel["threat"]["ioc"]["file"]["hash"]["sha256"] = split_line[1]
-                    intel.intel["threat"]["ioc"]["file"]["hash"]["md5"] = split_line[2]
+                    intel.intel["threat"]["type"] = "Hash"
+                    intel.intel["file"] = {}
+                    intel.intel["file"]["hash"] = {}
+                    intel.intel["file"]["hash"]["sha1"] = split_line[3]
+                    intel.intel["file"]["hash"]["sha256"] = split_line[1]
+                    intel.intel["file"]["hash"]["md5"] = split_line[2]
                 except Exception as err:
                     print(err)
                 else:
