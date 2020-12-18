@@ -1,5 +1,7 @@
 import json
 import re
+import datetime
+
 from abuse_bazaar import URLhaus, MalwareBazaar, FeodoTracker, SSLBlacklist
 from emergingthreats import ETFireWallBlockIps
 from eset import EsetMalwareIOC
@@ -198,6 +200,7 @@ class ElasticTip:
         for ioc in iocs:
             bulk_body += "{ \"update\" : { \"_index\" : \"%s\", \"_id\" : \"%s\" } }\n" % (self.index, ioc.id)
             if intel:
+                ioc.intel["@timestamp"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
                 bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.intel)
             else:
                 bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.ioc)

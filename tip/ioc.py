@@ -77,7 +77,6 @@ class Intel:
         """
         self.id = None
         self.intel = {
-            "@timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
             "event": {
                 "kind": "enrichment",
                 "category": "threat",
