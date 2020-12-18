@@ -122,6 +122,7 @@ class FeodoTracker:
                 pass
             else:
                 split_line = line.split(",")
+                # Add as source ip
                 try:
                     intel = Intel(
                         original=line,
@@ -136,8 +137,27 @@ class FeodoTracker:
                     )
                     intel.intel["threat"]["type"] = "IPV4"
                     intel.intel["source"] = {}
-                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = split_line[1]
+                except IndexError as err:
+                    pass
+                else:
+                    intel.add_docid()
+                    self.intel.append(intel)
+                # add as destination ip
+                try:
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_provider="Abuse.ch",
+                        event_dataset="FeodoTracker",
+                        threat_first_seen=split_line[0],
+                        threat_last_seen=split_line[3],
+                        threat_type="ip_address",
+                        threat_description=split_line[4]
+                    )
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["destination"] = {}
                     intel.intel["destination"]["ip"] = split_line[1]
                 except IndexError as err:
                     pass

@@ -48,6 +48,7 @@ class AbuseIPDB:
 
     def _parse(self):
         for obj in self._raw_threat_intel["data"]:
+            # Add as source ip
             try:
                 intel = Intel(
                     original=json.dumps(obj),
@@ -61,8 +62,26 @@ class AbuseIPDB:
                 )
                 intel.intel["threat"]["type"] = "IPV4"
                 intel.intel["source"] = {}
-                intel.intel["destination"] = {}
                 intel.intel["source"]["ip"] = obj["ipAddress"]
+            except Exception:
+                pass
+            else:
+                intel.add_docid()
+                self.intel.append(intel)
+            # Add as destination ip
+            try:
+                intel = Intel(
+                    original=json.dumps(obj),
+                    event_type="indicator",
+                    event_reference=self._feed_url,
+                    event_provider="AbuseIPdb",
+                    event_dataset="blacklist",
+                    threat_first_seen=None,
+                    threat_last_seen=obj["lastReportedAt"],
+                    threat_type="ip_address"
+                )
+                intel.intel["threat"]["type"] = "IPV4"
+                intel.intel["destination"] = {}
                 intel.intel["destination"]["ip"] = obj["ipAddress"]
             except Exception:
                 pass

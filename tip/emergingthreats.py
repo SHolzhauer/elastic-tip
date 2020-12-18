@@ -25,6 +25,7 @@ class ETFireWallBlockIps:
             if line[:1] is "#" or len(line) < 2:
                 pass
             else:
+                # Add as source ip
                 try:
                     if "/" in line:
                         type = "ip_range"
@@ -43,8 +44,31 @@ class ETFireWallBlockIps:
                     )
                     intel.intel["threat"]["type"] = "IPV4"
                     intel.intel["source"] = {}
-                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = line
+                except Exception:
+                    pass
+                else:
+                    intel.add_docid()
+                    self.intel.append(intel)
+                # Add as destination ip
+                try:
+                    if "/" in line:
+                        type = "ip_range"
+                    else:
+                        type = "ip_address"
+
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_provider="EmergingThreats",
+                        event_dataset="fwrules/emerging-Block-IPs",
+                        threat_first_seen=None,
+                        threat_last_seen=None,
+                        threat_type=type
+                    )
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["destination"] = {}
                     intel.intel["destination"]["ip"] = line
                 except Exception:
                     pass

@@ -27,6 +27,7 @@ class SpamhausDrop:
                 pass
             else:
                 split_line = line.split(';')
+                # Add as source ip
                 try:
                     intel = Intel(
                         original=line,
@@ -41,8 +42,27 @@ class SpamhausDrop:
                     )
                     intel.intel["threat"]["type"] = "IPV4"
                     intel.intel["source"] = {}
-                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = split_line[0]
+                except IndexError:
+                    pass
+                else:
+                    intel.add_docid()
+                    self.intel.append(intel)
+                # Add as destination ip
+                try:
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_provider="Spamhaus",
+                        event_dataset="Spamhaus.drop",
+                        threat_first_seen=None,
+                        threat_last_seen=None,
+                        threat_type="domain",
+                        threat_description=split_line[1]
+                    )
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["destination"] = {}
                     intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
                     pass
@@ -75,6 +95,7 @@ class SpamhausExtendedDrop:
                 pass
             else:
                 split_line = line.split(';')
+                # Add as source ip
                 try:
                     intel = Intel(
                         original=line,
@@ -89,8 +110,27 @@ class SpamhausExtendedDrop:
                     )
                     intel.intel["threat"]["type"] = "IPV4"
                     intel.intel["source"] = {}
-                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = split_line[0]
+                except IndexError:
+                    pass
+                else:
+                    intel.add_docid()
+                    self.intel.append(intel)
+                # Add as destination ip
+                try:
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_provider="Spamhaus",
+                        event_dataset="Spamhaus.extendeddrop",
+                        threat_first_seen=None,
+                        threat_last_seen=None,
+                        threat_type="domain",
+                        threat_description=split_line[1]
+                    )
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["destination"] = {}
                     intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
                     pass
@@ -123,6 +163,7 @@ class SpamhausDropIpv6:
                 pass
             else:
                 split_line = line.split(';')
+                # Add as source ip
                 try:
                     intel = Intel(
                         original=line,
@@ -137,8 +178,27 @@ class SpamhausDropIpv6:
                     )
                     intel.intel["threat"]["type"] = "IPV4"
                     intel.intel["source"] = {}
-                    intel.intel["destination"] = {}
                     intel.intel["source"]["ip"] = split_line[0]
+                except IndexError:
+                    pass
+                else:
+                    intel.add_docid()
+                    self.intel.append(intel)
+                # Add as destination ip
+                try:
+                    intel = Intel(
+                        original=line,
+                        event_type="indicator",
+                        event_reference=self._feed_url,
+                        event_provider="Spamhaus",
+                        event_dataset="Spamhaus.ipv6drop",
+                        threat_first_seen=None,
+                        threat_last_seen=None,
+                        threat_type="domain",
+                        threat_description=split_line[1]
+                    )
+                    intel.intel["threat"]["type"] = "IPV4"
+                    intel.intel["destination"] = {}
                     intel.intel["destination"]["ip"] = split_line[0]
                 except IndexError:
                     pass

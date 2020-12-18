@@ -77,6 +77,7 @@ class Intel:
         """
         self.id = None
         self.intel = {
+            "@timestamp": threat_first_seen,
             "event": {
                 "kind": "enrichment",
                 "category": "threat",
