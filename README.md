@@ -6,6 +6,11 @@ solution.
 The intelligence ingested by elastic-tip is meant to be used by the [threat matching](https://github.com/elastic/kibana/pull/78955)
 detection rule type.
 
+## Recommended usage
+I build this tool to work together with the "threat matching" detection capability of the Elastic stack.
+For this the recommended usage is to periodically run the tool with the modules you want and setup a threat matching
+rule to match against the `elatic-tip` index.
+
 ## CLI
 ```bash
 python3 tip/elastic_tip_cli.py help
