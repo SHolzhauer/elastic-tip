@@ -57,8 +57,8 @@ class Intel:
                  event_reference=None,
                  event_provider=None,
                  event_dataset=None,
-                 threat_first_seen=datetime.now().strftime("%m-%d-%Y %H:%M:%S"),
-                 threat_last_seen=datetime.now().strftime("%m-%d-%Y %H:%M:%S"),
+                 threat_first_seen=None,
+                 threat_last_seen=None,
                  threat_last_update=None,
                  threat_type=None,
                  threat_description=None):
@@ -77,7 +77,7 @@ class Intel:
         """
         self.id = None
         self.intel = {
-            "@timestamp": threat_first_seen,
+            "@timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
             "event": {
                 "kind": "enrichment",
                 "category": "threat",
