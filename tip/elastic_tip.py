@@ -1,6 +1,6 @@
 import json
 import re
-import datetime
+from datetime import datetime
 
 from abuse_bazaar import URLhaus, MalwareBazaar, FeodoTracker, SSLBlacklist
 from emergingthreats import ETFireWallBlockIps
