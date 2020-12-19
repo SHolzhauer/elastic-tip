@@ -8,6 +8,7 @@ from eset import EsetMalwareIOC
 from abuseipdb import AbuseIPDB
 from elasticsearch import Elasticsearch
 from spamhaus import SpamhausDrop, SpamhausExtendedDrop, SpamhausDropIpv6
+from botvrij import BotvrijFileNames, BotvrijDomains, BotvrijDstIP, BotvrijUrl
 
 
 class ElasticTip:
@@ -85,6 +86,30 @@ class ElasticTip:
                 "enabled": False,
                 "class": SpamhausDropIpv6(),
                 "ref": "https://www.spamhaus.org/drop/",
+                "note": None
+            },
+            "Botvrij-filenames": {
+                "enabled": False,
+                "class": BotvrijFileNames(),
+                "ref": "https://botvrij.eu/data/ioclist.filename.raw",
+                "note": None
+            },
+            "Botvrij-domains": {
+                "enabled": False,
+                "class": BotvrijDomains(),
+                "ref": "https://botvrij.eu/data/ioclist.domain.raw",
+                "note": None
+            },
+            "Botvrij-destinations": {
+                "enabled": False,
+                "class": BotvrijDstIP(),
+                "ref": "https://botvrij.eu/data/ioclist.ip-dst.raw",
+                "note": None
+            },
+            "Botvrij-urls": {
+                "enabled": False,
+                "class": BotvrijUrl(),
+                "ref": "https://botvrij.eu/data/ioclist.url.raw",
                 "note": None
             }
         }
