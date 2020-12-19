@@ -40,9 +40,7 @@ class URLhaus:
                         threat_type="domain",
                         threat_description=split_line[4]
                     )
-                    intel.intel["threat"]["type"] = "URL"
-                    intel.intel["url"] = {}
-                    intel.intel["url"]["full"] = split_line[2]
+                    intel.add_url(original=split_line[2])
                 except IndexError:
                     pass
                 else:
@@ -85,16 +83,9 @@ class MalwareBazaar:
                         threat_last_seen=None,
                         threat_type="file_hash"
                     )
-                    intel.intel["threat"]["type"] = "Hash"
-                    intel.intel["file"] = {}
-                    intel.intel["file"]["hash"] = {}
-                    intel.intel["file"]["hash"]["sha1"] = split_line[3]
-                    intel.intel["file"]["hash"]["sha256"] = split_line[1]
-                    intel.intel["file"]["hash"]["md5"] = split_line[2]
-                    intel.intel["file"]["name"] = split_line[5]
-                    intel.intel["file"]["extension"] = split_line[6]
-                    intel.intel["file"]["mime_type"] = split_line[7]
-                    intel.intel["threat"]["malware"]["name"] = split_line[8]
+                    intel.add_file(name=split_line[5], extension=split_line[6], mime_type=split_line[7],
+                                   sha1=split_line[3], sha256=split_line[1], md5=split_line[2])
+                    intel.add_malware(split_line[8])
                 except Exception as err:
                     print(err)
                 else:
@@ -139,11 +130,8 @@ class FeodoTracker:
                         threat_type="ip_address",
                         threat_description=split_line[4]
                     )
-                    intel.intel["threat"]["type"] = "IPV4"
-                    intel.intel["destination"] = {}
-                    intel.intel["destination"]["ip"] = split_line[1]
-                    intel.intel["destination"]["port"] = split_line[2]
-                    intel.intel["threat"]["malware"]["name"] = split_line[4]
+                    intel.add_destination(ip=split_line[1], port=split_line[2])
+                    intel.add_malware(name=split_line[4])
                 except IndexError as err:
                     pass
                 else:
@@ -187,11 +175,7 @@ class SSLBlacklist:
                         threat_type="ssl_hash",
                         threat_description=split_line[2]
                     )
-                    intel.intel["threat"]["type"] = "Hash"
-                    intel.intel["tls"] = {}
-                    intel.intel["tls"]["server"] = {}
-                    intel.intel["tls"]["server"]["hash"] = {}
-                    intel.intel["tls"]["server"]["hash"]["sha1"] = split_line[1]
+                    intel.add_tls(s_sha1=split_line[1])
                     if "C&C" in intel.intel["threat"]["ioc"]["description"]:
                         intel.add_mitre("TA0011")
                     elif "" in intel.intel["threat"]["ioc"]["description"]:

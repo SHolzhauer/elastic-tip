@@ -50,15 +50,12 @@ class EsetMalwareIOC:
                                 threat_last_seen=None,
                                 threat_type="file_hash"
                             )
-                            intel.intel["threat"]["type"] = "Hash"
-                            intel.intel["file"] = {}
-                            intel.intel["file"]["hash"] = {}
                             if file == "samples.sha1":
-                                intel.intel["file"]["hash"]["sha1"] = line
+                                intel.add_file(sha1=line)
                             elif file == "samples.sha256":
-                                intel.intel["file"]["hash"]["sha256"] = line
+                                intel.add_file(sha256=line)
                             elif file == "samples.md5":
-                                intel.intel["file"]["hash"]["md5"] = line
+                                intel.add_file(md5=line)
                         except Exception as err:
                             print(err)
                         else:

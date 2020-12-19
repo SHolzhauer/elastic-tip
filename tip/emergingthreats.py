@@ -42,9 +42,7 @@ class ETFireWallBlockIps:
                         threat_last_seen=None,
                         threat_type=type
                     )
-                    intel.intel["threat"]["type"] = "IPV4"
-                    intel.intel["source"] = {}
-                    intel.intel["source"]["ip"] = line
+                    intel.add_source(ip=line)
                 except Exception:
                     pass
                 else:
@@ -67,9 +65,7 @@ class ETFireWallBlockIps:
                         threat_last_seen=None,
                         threat_type=type
                     )
-                    intel.intel["threat"]["type"] = "IPV4"
-                    intel.intel["destination"] = {}
-                    intel.intel["destination"]["ip"] = line
+                    intel.add_destination(ip=line)
                 except Exception:
                     pass
                 else:

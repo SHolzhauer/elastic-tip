@@ -60,9 +60,7 @@ class AbuseIPDB:
                     threat_last_seen=obj["lastReportedAt"],
                     threat_type="ip_address"
                 )
-                intel.intel["threat"]["type"] = "IPV4"
-                intel.intel["source"] = {}
-                intel.intel["source"]["ip"] = obj["ipAddress"]
+                intel.add_source(ip=obj["ipAddress"])
             except Exception:
                 pass
             else:
@@ -80,9 +78,7 @@ class AbuseIPDB:
                     threat_last_seen=obj["lastReportedAt"],
                     threat_type="ip_address"
                 )
-                intel.intel["threat"]["type"] = "IPV4"
-                intel.intel["destination"] = {}
-                intel.intel["destination"]["ip"] = obj["ipAddress"]
+                intel.add_destination(ip=obj["ipAddress"])
             except Exception:
                 pass
             else:
