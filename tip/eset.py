@@ -50,7 +50,7 @@ class EsetMalwareIOC:
                                 threat_last_seen=None,
                                 threat_type="file_hash"
                             )
-                            intel.intel["threat"]["type"]= "Hash"
+                            intel.intel["threat"]["type"] = "Hash"
                             intel.intel["file"] = {}
                             intel.intel["file"]["hash"] = {}
                             if file == "samples.sha1":

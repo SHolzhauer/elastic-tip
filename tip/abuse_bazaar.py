@@ -91,6 +91,10 @@ class MalwareBazaar:
                     intel.intel["file"]["hash"]["sha1"] = split_line[3]
                     intel.intel["file"]["hash"]["sha256"] = split_line[1]
                     intel.intel["file"]["hash"]["md5"] = split_line[2]
+                    intel.intel["file"]["name"] = split_line[5]
+                    intel.intel["file"]["extension"] = split_line[6]
+                    intel.intel["file"]["mime_type"] = split_line[7]
+                    intel.intel["threat"]["malware"]["name"] = split_line[8]
                 except Exception as err:
                     print(err)
                 else:
@@ -122,27 +126,6 @@ class FeodoTracker:
                 pass
             else:
                 split_line = line.split(",")
-                # Add as source ip
-                try:
-                    intel = Intel(
-                        original=line,
-                        event_type="indicator",
-                        event_reference=self._feed_url,
-                        event_provider="Abuse.ch",
-                        event_dataset="FeodoTracker",
-                        threat_first_seen=split_line[0],
-                        threat_last_seen=split_line[3],
-                        threat_type="ip_address",
-                        threat_description=split_line[4]
-                    )
-                    intel.intel["threat"]["type"] = "IPV4"
-                    intel.intel["source"] = {}
-                    intel.intel["source"]["ip"] = split_line[1]
-                except IndexError as err:
-                    pass
-                else:
-                    intel.add_docid()
-                    self.intel.append(intel)
                 # add as destination ip
                 try:
                     intel = Intel(
@@ -159,6 +142,8 @@ class FeodoTracker:
                     intel.intel["threat"]["type"] = "IPV4"
                     intel.intel["destination"] = {}
                     intel.intel["destination"]["ip"] = split_line[1]
+                    intel.intel["destination"]["port"] = split_line[2]
+                    intel.intel["threat"]["malware"]["name"] = split_line[4]
                 except IndexError as err:
                     pass
                 else:
