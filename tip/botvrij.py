@@ -129,7 +129,7 @@ class BotvrijDstIP:
                     threat_last_seen=None,
                     threat_type="IPV4"
                 )
-                intel.add_destination(ip=line)
+                intel.add_ip(ip=line)
             except Exception:
                 pass
             else:

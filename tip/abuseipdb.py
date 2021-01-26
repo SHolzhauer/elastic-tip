@@ -60,25 +60,7 @@ class AbuseIPDB:
                     threat_last_seen=obj["lastReportedAt"],
                     threat_type="ip_address"
                 )
-                intel.add_source(ip=obj["ipAddress"])
-            except Exception:
-                pass
-            else:
-                intel.add_docid()
-                self.intel.append(intel)
-            # Add as destination ip
-            try:
-                intel = Intel(
-                    original=json.dumps(obj),
-                    event_type="indicator",
-                    event_reference=self._feed_url,
-                    event_provider="AbuseIPdb",
-                    event_dataset="blacklist",
-                    threat_first_seen=None,
-                    threat_last_seen=obj["lastReportedAt"],
-                    threat_type="ip_address"
-                )
-                intel.add_destination(ip=obj["ipAddress"])
+                intel.add_ip(ip=obj["ipAddress"])
             except Exception:
                 pass
             else:

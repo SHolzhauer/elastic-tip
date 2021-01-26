@@ -42,30 +42,7 @@ class ETFireWallBlockIps:
                         threat_last_seen=None,
                         threat_type=type
                     )
-                    intel.add_source(ip=line)
-                except Exception:
-                    pass
-                else:
-                    intel.add_docid()
-                    self.intel.append(intel)
-                # Add as destination ip
-                try:
-                    if "/" in line:
-                        type = "ip_range"
-                    else:
-                        type = "ip_address"
-
-                    intel = Intel(
-                        original=line,
-                        event_type="indicator",
-                        event_reference=self._feed_url,
-                        event_provider="EmergingThreats",
-                        event_dataset="fwrules/emerging-Block-IPs",
-                        threat_first_seen=None,
-                        threat_last_seen=None,
-                        threat_type=type
-                    )
-                    intel.add_destination(ip=line)
+                    intel.add_ip(ip=line)
                 except Exception:
                     pass
                 else:

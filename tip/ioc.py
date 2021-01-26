@@ -91,7 +91,7 @@ class Intel:
               "version": "1.7"
             },
             "threat": {
-                "ioc": {
+                "indicator": {
                     "first_seen": threat_first_seen,
                     "last_seen": threat_last_seen,
                     "sightings": 0,
@@ -169,57 +169,76 @@ class Intel:
             self.intel[object] = obj
             self.intel["threat"]["type"] = "IPV4"
 
-    def add_source(self, domain=None, ip=None, mac=None, port=None, registered_domain=None, subdomain=None,
-                   top_level_domain=None):
+    def add_ip(self, domain=None, ip=None, mac=None, port=None, registered_domain=None, subdomain=None, top_level_domain=None):
         """
-        Add the source object to the intel
-        :param domain:
-        :param ip:
+        Add network information as indicator
+        :param domain: domain name
+        :param ip: IPv4 or IPv6 address
         :param mac:
-        :param port:
+        :param port: Port number
         :param registered_domain:
         :param subdomain:
         :param top_level_domain:
         :return:
         """
-        try:
-            self._build_traffic(
-               object="source",
-               domain=domain,
-               ip=ip,
-               mac=mac,
-               port=port,
-               registered_domain=registered_domain,
-               subdomain=subdomain,
-               top_level_domain=top_level_domain)
-        except Exception as err:
-            print("Failed to build source object: {}".format(err))
+        if domain:
+            self.intel["threat"]["indicator"]["domain"] = domain
+        if ip:
+            self.intel["threat"]["indicator"]["ip"] = ip
+        if port:
+            self.intel["threat"]["indicator"]["port"] = port
 
-    def add_destination(self, domain=None, ip=None, mac=None, port=None, registered_domain=None, subdomain=None,
-                        top_level_domain=None):
-        """
-        Add the destination object to the intel
-        :param domain:
-        :param ip:
-        :param mac:
-        :param port:
-        :param registered_domain:
-        :param subdomain:
-        :param top_level_domain:
-        :return:
-        """
-        try:
-            self._build_traffic(
-                object="destination",
-                domain=domain,
-                ip=ip,
-                mac=mac,
-                port=port,
-                registered_domain=registered_domain,
-                subdomain=subdomain,
-                top_level_domain=top_level_domain)
-        except Exception as err:
-            print("Failed to build destination object: {}".format(err))
+    #def add_source(self, domain=None, ip=None, mac=None, port=None, registered_domain=None, subdomain=None,
+    #               top_level_domain=None):
+    #    """
+    #    Add the source object to the intel
+    #    :param domain:
+    #    :param ip:
+    #    :param mac:
+    #    :param port:
+    #    :param registered_domain:
+    #    :param subdomain:
+    #    :param top_level_domain:
+    #    :return:
+    #    """
+    #    try:
+    #        self._build_traffic(
+    #           object="source",
+    #           domain=domain,
+    #           ip=ip,
+    #           mac=mac,
+    #           port=port,
+    #           registered_domain=registered_domain,
+    #           subdomain=subdomain,
+    #           top_level_domain=top_level_domain)
+    #    except Exception as err:
+    #        print("Failed to build source object: {}".format(err))
+
+    #def add_destination(self, domain=None, ip=None, mac=None, port=None, registered_domain=None, subdomain=None,
+    #                    top_level_domain=None):
+    #    """
+    #    Add the destination object to the intel
+    #    :param domain:
+    #    :param ip:
+    #    :param mac:
+    #    :param port:
+    #    :param registered_domain:
+    #    :param subdomain:
+    #    :param top_level_domain:
+    #    :return:
+    #    """
+    #    try:
+    #        self._build_traffic(
+    #            object="destination",
+    #            domain=domain,
+    #            ip=ip,
+    #            mac=mac,
+    #            port=port,
+    #            registered_domain=registered_domain,
+    #            subdomain=subdomain,
+    #            top_level_domain=top_level_domain)
+    #    except Exception as err:
+    #        print("Failed to build destination object: {}".format(err))
 
     def add_malware(self, name=None, family=None, malware_type=None):
         try:
