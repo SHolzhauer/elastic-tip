@@ -6,23 +6,23 @@ class MyTestCase(unittest.TestCase):
     def test_something(self):
         self.assertEqual(True, True)
 
-    def test_add_source(self):
+    def test_add_ip(self):
         intel = Intel()
-        intel.add_source(ip="1.1.1.1")
-        self.assertEqual(intel.intel["source"]["ip"], "1.1.1.1")
+        intel.add_ip(ip="1.1.1.1")
+        self.assertEqual(intel.intel["threat"]["indicator"]["ip"], "1.1.1.1")
         intel = Intel()
-        intel.add_source(ip="1.1.1.1", port=443)
-        self.assertEqual(intel.intel["source"]["ip"], "1.1.1.1")
-        self.assertEqual(intel.intel["source"]["port"], 443)
+        intel.add_ip(ip="1.1.1.1", port=443)
+        self.assertEqual(intel.intel["threat"]["indicator"]["ip"], "1.1.1.1")
+        self.assertEqual(intel.intel["threat"]["indicator"]["port"], 443)
 
-    def test_add_destination(self):
+    def test_add_ip(self):
         intel = Intel()
-        intel.add_destination(ip="1.1.1.1")
-        self.assertEqual(intel.intel["destination"]["ip"], "1.1.1.1")
+        intel.add_ip(ip="1.1.1.1")
+        self.assertEqual(intel.intel["threat"]["indicator"]["ip"], "1.1.1.1")
         intel = Intel()
-        intel.add_destination(ip="1.1.1.1", port=443)
-        self.assertEqual(intel.intel["destination"]["ip"], "1.1.1.1")
-        self.assertEqual(intel.intel["destination"]["port"], 443)
+        intel.add_ip(ip="1.1.1.1", port=443)
+        self.assertEqual(intel.intel["threat"]["indicator"]["ip"], "1.1.1.1")
+        self.assertEqual(intel.intel["threat"]["indicator"]["port"], 443)
 
     def test_add_malware(self):
         intel = Intel()
