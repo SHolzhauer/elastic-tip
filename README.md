@@ -89,3 +89,10 @@ _for the exact feed url's look at the `event.reference` field_
 | EmergingThreats-Blocklist | Emerging Threats | https://rules.emergingthreats.net/ | This is just the firewall blocklist |
 | ESET-MalwareIOC | ESET malwareIOC repo | https://github.com/eset/malware-ioc | |
 | AbuseIPdb | AbuseIPdb | https://www.abuseipdb.com/ | Only 10.000 results, API key is required. |
+| Spamhaus-Drop | Spamhaus droplist | https://www.spamhaus.org/drop/ | |
+| Spamhaus-ExtendedDrop | Spamhaus extended droplist | https://www.spamhaus.org/drop/ | |
+| Spamhaus-IPv6Drop | Spamhaus IPv6 droplist | https://www.spamhaus.org/drop/ | |
+| Botvrij-filenames | Botvrij files | https://botvrij.eu/data/ioclist.filename.raw | |
+| Botvrij-domains | Botvrij Domain names | https://botvrij.eu/data/ioclist.domain.raw | |
+| Botvrij-destinations | Botvrij destinations | https://botvrij.eu/data/ioclist.ip-dst.raw | |
+| Spamhaus-urls | Botvrij url list | https://botvrij.eu/data/ioclist.url.raw | |
