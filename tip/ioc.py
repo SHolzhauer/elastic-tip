@@ -95,15 +95,15 @@ class Intel:
                     "first_seen": threat_first_seen,
                     "last_seen": threat_last_seen,
                     "sightings": 0,
-                    "type": "unknown",
+                    "type": [],
                     "description": threat_description,
                 },
-                "type": threat_type,
                 "tactic": {},
                 "technique": {}
 
             }
         }
+        self._add_type(threat_type)
 
     def add_mitre(self, tactic=None, technique=None):
         """
@@ -126,6 +126,10 @@ class Intel:
         self.id = hashlib.sha1(json.dumps(self.intel).encode('utf-8')).hexdigest()
         self.intel["event"]["hash"] = self.id
 
+    def _add_type(self, indicator_type=None):
+        if indicator_type:
+            self.intel["threat"]["indicator"]["type"].append(indicator_type)
+
     def _build_traffic(self, object,
                        domain=None,
                        ip=None,
@@ -144,6 +148,7 @@ class Intel:
         :param subdomain:
         :param top_level_domain:
         :return:"""
+        raise OutDatedException()
         if object not in ["source", "destination"]:
             raise KeyError("wrong object specified")
         try:
@@ -478,4 +483,8 @@ class Intel:
 
 
 class SchemaException(Exception):
+    pass
+
+
+class OutDatedException(Exception):
     pass
