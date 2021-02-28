@@ -1,0 +1,45 @@
+[metadata]
+creation_date = "2021/02/28"
+maturity = "production"
+updated_date = "2021/02/28"
+
+[rule]
+author = ["Stijn Holzhauer"]
+description = '''
+A file was detected which has a hash corresponding to a known Indicator Of Compromise
+'''
+index = ["auditbeat-*"]
+language = "kuery"
+license = "Elastic License"
+name = "IOC match on file hash"
+risk_score = 99
+rule_id = "a2db1d22-de51-4cbe-bb40-d7abd2450512"
+severity = "high"
+tags = ["ioc", "file"]
+type = "query"
+query = '''
+event.module:file_integrity
+'''
+threat_index = ["elastic-tip"]
+threat_query = "*:*"
+
+[[threat_mapping]]
+[[threat_mapping.entries]]
+field="file.hash.md5"
+type="mapping"
+value="file.hash.md5"
+[[threat_mapping]]
+[[threat_mapping.entries]]
+field="file.hash.sha1"
+type="mapping"
+value="file.hash.sha1"
+[[threat_mapping]]
+[[threat_mapping.entries]]
+field="file.hash.sha256"
+type="mapping"
+value="file.hash.sha256"
+[[threat_mapping]]
+[[threat_mapping.entries]]
+field="file.hash.sha512"
+type="mapping"
+value="file.hash.sha512"

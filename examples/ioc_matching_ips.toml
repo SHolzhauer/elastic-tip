@@ -1,0 +1,32 @@
+[metadata]
+creation_date = "2021/02/28"
+maturity = "production"
+updated_date = "2021/02/28"
+
+[rule]
+author = ["Stijn Holzhauer"]
+description = '''
+A host is communicating with a destination.ip which is known to be malicious and is registered as Indicator Of Compromise.
+'''
+index = ["packetbeat-*"]
+language = "kuery"
+license = "Elastic License"
+name = "IOC match on IP address"
+risk_score = 100
+rule_id = "312971de-17de-405e-8a6a-978d5e9841e2"
+severity = "high"
+tags = ["ioc", "network"]
+type = "query"
+
+query = '''
+destination.ip:*
+'''
+
+threat_index = ["elastic-tip"]
+threat_query = "*:*"
+
+[[threat_mapping]]
+[[threat_mapping.entries]]
+field="destination.ip"
+type="mapping"
+value="threat.ip"
