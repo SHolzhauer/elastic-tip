@@ -11,6 +11,16 @@ I build this tool to work together with the "threat matching" detection capabili
 For this the recommended usage is to periodically run the tool with the modules you want and setup a threat matching
 rule to match against the `elatic-tip` index.
 
+## Requirements
+This tool has been tested on Python3.6, Python3.8
+
+Make sure to install the dependencies by creating a virtual environment and pip installing them.
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## CLI
 ```bash
 python3 tip/elastic_tip_cli.py help
