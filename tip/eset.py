@@ -1,4 +1,4 @@
-from os import walk
+from os import walk, path, mkdir
 from shutil import rmtree
 from ioc import Intel
 from time import time
@@ -24,6 +24,10 @@ class EsetMalwareIOC:
 
     def _download(self):
         self._retrieved = time()
+        # Make sure the dir exists
+        if not path.exists("tip/githubclones"):
+            mkdir("tip/githubclones")
+        # Clone the git repo
         Git("tip/githubclones/eset").clone(self._feed_url)
 
     def _parse(self):
