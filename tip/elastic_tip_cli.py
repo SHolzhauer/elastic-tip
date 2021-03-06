@@ -63,7 +63,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
                 exit()
                 print(self._cli_footer)
             elif opt in ["-m", "--modules"]:
-                if arg == "*":
+                if "*" in arg:
                     for mod in self._tip.modules:
                         self._tip.modules[mod]["enabled"] = True
                 else:
