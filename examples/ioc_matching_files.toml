@@ -16,7 +16,7 @@ risk_score = 99
 rule_id = "a2db1d22-de51-4cbe-bb40-d7abd2450512"
 severity = "high"
 tags = ["ioc", "file"]
-type = "query"
+type = "threat_matching"
 query = '''
 event.module:file_integrity
 '''

@@ -16,7 +16,7 @@ risk_score = 100
 rule_id = "312971de-17de-405e-8a6a-978d5e9841e2"
 severity = "high"
 tags = ["ioc", "network"]
-type = "query"
+type = "threat_matching"
 
 query = '''
 destination.ip:*
