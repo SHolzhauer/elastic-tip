@@ -7,12 +7,13 @@ from os import environ
 
 class BotvrijFileNames:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://botvrij.eu/data/ioclist.filename.raw"
         self.key = None
         self._raw_threat_intel = ""
+        self.conf = conf
 
     def run(self):
         self._download()
@@ -51,12 +52,13 @@ class BotvrijFileNames:
 
 class BotvrijDomains:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://botvrij.eu/data/ioclist.domain.raw"
         self.key = None
         self._raw_threat_intel = ""
+        self.conf = conf
 
     def run(self):
         self._download()
@@ -95,12 +97,13 @@ class BotvrijDomains:
 
 class BotvrijDstIP:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://botvrij.eu/data/ioclist.ip-dst.raw"
         self.key = None
         self._raw_threat_intel = ""
+        self.conf = conf
 
     def run(self):
         self._download()
@@ -139,12 +142,13 @@ class BotvrijDstIP:
 
 class BotvrijUrl:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://botvrij.eu/data/ioclist.url.raw"
         self.key = None
         self._raw_threat_intel = ""
+        self.conf = conf
 
     def run(self):
         self._download()

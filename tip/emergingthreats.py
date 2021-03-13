@@ -5,10 +5,11 @@ from time import time
 
 class ETFireWallBlockIps:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
+        self.conf = conf
 
     def run(self):
         self._download()

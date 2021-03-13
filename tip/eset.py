@@ -7,10 +7,11 @@ from git import Git
 
 class EsetMalwareIOC:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://github.com/eset/malware-ioc.git"
+        self.conf = conf
 
     def run(self):
         self._download()

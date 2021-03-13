@@ -6,11 +6,12 @@ from time import time
 
 class URLhaus:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self._raw_threat_intel = None
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://urlhaus.abuse.ch/downloads/csv_recent/"
+        self.conf = conf
 
     def run(self):
         self._download()
@@ -50,11 +51,12 @@ class URLhaus:
 
 class MalwareBazaar:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self._raw_threat_intel = None
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://bazaar.abuse.ch/export/csv/recent/"
+        self.conf = conf
 
     def run(self):
         self._download()
@@ -95,11 +97,12 @@ class MalwareBazaar:
 
 class FeodoTracker:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self._raw_threat_intel = None
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://feodotracker.abuse.ch/downloads/ipblocklist.csv"
+        self.conf = conf
 
     def run(self):
         self._download()
@@ -141,11 +144,12 @@ class FeodoTracker:
 
 class SSLBlacklist:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self._raw_threat_intel = None
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://sslbl.abuse.ch/blacklist/sslblacklist.csv"
+        self.conf = conf
 
     def run(self):
         self._download()

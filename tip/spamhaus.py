@@ -5,11 +5,12 @@ from time import time
 
 class SpamhausDrop:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self._raw_threat_intel = None
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://www.spamhaus.org/drop/drop.txt"
+        self.conf = conf
 
     def run(self):
         self._download()
@@ -50,11 +51,12 @@ class SpamhausDrop:
 
 class SpamhausExtendedDrop:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self._raw_threat_intel = None
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://www.spamhaus.org/drop/edrop.txt"
+        self.conf = conf
 
     def run(self):
         self._download()
@@ -95,11 +97,12 @@ class SpamhausExtendedDrop:
 
 class SpamhausDropIpv6:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self._raw_threat_intel = None
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://www.spamhaus.org/drop/dropv6.txt"
+        self.conf = conf
 
     def run(self):
         self._download()

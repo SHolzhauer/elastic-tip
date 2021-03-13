@@ -7,12 +7,13 @@ from os import environ
 
 class AbuseIPDB:
 
-    def __init__(self):
+    def __init__(self, conf=None):
         self.intel = []
         self._retrieved = None
         self._feed_url = "https://api.abuseipdb.com/api/v2/blacklist"
-        self.confidenceminimum = '90'
-        self.key = None
+        self._conf = conf
+        self.confidenceminimum = self._conf["AbuseIPdb"].getint("confidenceminimum")
+        self.key = self._conf["AbuseIPdb"].getint("apikey")
         self._raw_threat_intel = {
             "data": []
         }
