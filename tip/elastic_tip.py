@@ -9,112 +9,127 @@ from abuseipdb import AbuseIPDB
 from elasticsearch import Elasticsearch
 from spamhaus import SpamhausDrop, SpamhausExtendedDrop, SpamhausDropIpv6
 from botvrij import BotvrijFileNames, BotvrijDomains, BotvrijDstIP, BotvrijUrl
+import configparser
+from os import path
 
 
 class ElasticTip:
 
     def __init__(self):
-        self.index = "elastic-tip"
-        self.eshosts = []
-        self.esport = 9200
-        self.esuser = None
-        self.espass = None
-        self.setup_index = True
-        self.tls = {
-            "use": True,
-            "cacert": None,
-            "verify": True
-        }
+        self.conf = None
         self._es = None
         self._total_count = 0
-        self.modules = {
+        self.modules = {}
+
+    def load_conf_file(self, conffile):
+        """
+        Method to load the values from a configuration file provided
+        :param conffile: Path to the conf file
+        :return:
+        """
+        # Verify the file exists
+        if not path.exists(conffile):
+            raise FileNotFoundError("Provided config file does not exists")
+        else:
+            conf = configparser.ConfigParser()
+            conf.read(conffile)
+            self.conf = conf
+
+    def _load_modules(self):
+        modules = {
             "URLhaus": {
                 "enabled": False,
-                "class": URLhaus(),
+                "class": URLhaus(self.conf),
                 "ref": "https://urlhaus.abuse.ch/",
                 "note": None
             },
             "MalwareBazaar": {
                 "enabled": False,
-                "class": MalwareBazaar(),
+                "class": MalwareBazaar(self.conf),
                 "ref": "https://bazaar.abuse.ch/",
                 "note": None
             },
             "FeodoTracker": {
                 "enabled": False,
-                "class": FeodoTracker(),
+                "class": FeodoTracker(self.conf),
                 "ref": "https://feodotracker.abuse.ch/",
                 "note": None
             },
             "SSLBlacklist": {
                 "enabled": False,
-                "class": SSLBlacklist(),
+                "class": SSLBlacklist(self.conf),
                 "ref": "https://sslbl.abuse.ch/",
                 "note": None
             },
             "EmergingThreats-Blocklist": {
                 "enabled": False,
-                "class": ETFireWallBlockIps(),
+                "class": ETFireWallBlockIps(self.conf),
                 "ref": "https://rules.emergingthreats.net/",
                 "note": None
             },
             "ESET-MalwareIOC": {
                 "enabled": False,
-                "class": EsetMalwareIOC(),
+                "class": EsetMalwareIOC(self.conf),
                 "ref": "https://github.com/eset/malware-ioc",
                 "note": None
             },
             "AbuseIPdb": {
                 "enabled": False,
-                "class": AbuseIPDB(),
+                "class": AbuseIPDB(self.conf),
                 "ref": "https://www.abuseipdb.com/",
                 "note": "AbuseIPdb requires an API key to work, this can be set through the 'ABUSE_IP_KEY' environment variable or will be requested upon runtime"
             },
             "Spamhaus-Drop": {
                 "enabled": False,
-                "class": SpamhausDrop(),
+                "class": SpamhausDrop(self.conf),
                 "ref": "https://www.spamhaus.org/drop/",
                 "note": None
             },
             "Spamhaus-ExtendedDrop": {
                 "enabled": False,
-                "class": SpamhausExtendedDrop(),
+                "class": SpamhausExtendedDrop(self.conf),
                 "ref": "https://www.spamhaus.org/drop/",
                 "note": None
             },
             "Spamhaus-IPv6Drop": {
                 "enabled": False,
-                "class": SpamhausDropIpv6(),
+                "class": SpamhausDropIpv6(self.conf),
                 "ref": "https://www.spamhaus.org/drop/",
                 "note": None
             },
             "Botvrij-filenames": {
                 "enabled": False,
-                "class": BotvrijFileNames(),
+                "class": BotvrijFileNames(self.conf),
                 "ref": "https://botvrij.eu/data/ioclist.filename.raw",
                 "note": None
             },
             "Botvrij-domains": {
                 "enabled": False,
-                "class": BotvrijDomains(),
+                "class": BotvrijDomains(self.conf),
                 "ref": "https://botvrij.eu/data/ioclist.domain.raw",
                 "note": None
             },
             "Botvrij-destinations": {
                 "enabled": False,
-                "class": BotvrijDstIP(),
+                "class": BotvrijDstIP(self.conf),
                 "ref": "https://botvrij.eu/data/ioclist.ip-dst.raw",
                 "note": None
             },
             "Botvrij-urls": {
                 "enabled": False,
-                "class": BotvrijUrl(),
+                "class": BotvrijUrl(self.conf),
                 "ref": "https://botvrij.eu/data/ioclist.url.raw",
                 "note": None
             }
         }
 
+        for mod in modules:
+            modules[mod]["enabled"] = self.conf[mod].getboolean("enabled")
+
+        self.modules = modules
+
     def run(self):
+        self._load_modules()
         self._build_es_conn()
         self.verify_tip()
         print("Running TIP")
@@ -127,7 +142,7 @@ class ElasticTip:
                 except AttributeError:
                     if len(mod.intel) > 0:
                         self._ingest(mod.intel, module, True)
-        self._es.indices.refresh(index=self.index)
+        self._es.indices.refresh(index=self.conf["Elasticsearch"].get("index"))
         print("Ingested a total of {} IOC's".format(self._total_count))
 
     def init_tip(self):
@@ -150,14 +165,14 @@ class ElasticTip:
         with open("tip/elasticsearch/index_mapping.json", "r") as file:
             index_mapping = json.loads(file.read())
         # Verify the index exists
-        if self._es.indices.exists(index=self.index):
-            print("Index {} exists".format(self.index))
+        if self._es.indices.exists(index=self.conf["Elasticsearch"].get("index")):
+            print("Index {} exists".format(self.conf["Elasticsearch"].get("index")))
         else:
-            print("Index {} does not exists, creating...".format(self.index))
-            if self.setup_index:
+            print("Index {} does not exists, creating...".format(self.conf["Elasticsearch"].get("index")))
+            if self.conf["Elasticsearch"].getboolean("setup_index"):
                 try:
                     self._es.indices.create(
-                        index=self.index,
+                        index=self.conf["Elasticsearch"].get("index"),
                         body={
                             "settings": index_settings,
                             "mappings": index_mapping
@@ -172,7 +187,7 @@ class ElasticTip:
     def _build_es_conn(self):
         if not self._es:
             eshosts = []
-            for hoststring in self.eshosts:
+            for hoststring in self.conf["Elasticsearch"].get("hosts"):
 
                 # Determine host and port
                 host, port = self._parse_hosts(hoststring)
@@ -181,23 +196,28 @@ class ElasticTip:
                     'host': host,
                     'port': port
                 }
-                if not self.tls["use"]:
+                if not self.conf["Elasticsearch"].getboolean("use_tls"):
                     host_block["use_ssl"] = False
                 else:
                     host_block["use_ssl"] = True
 
-                if self.tls["cacert"]:
-                    host_block["ca_certs"] = self.tls["cacert"]
+                if "cacert" in self.conf["Elasticsearch"]:
+                    host_block["ca_certs"] = self.conf["Elasticsearch"].get("cacert")
 
-                if not self.tls["verify"]:
+                if not self.conf["Elasticsearch"].getboolean("tls_verify"):
                     host_block["verify_certs"] = False
                     host_block["ssl_show_warn"] = False
                 eshosts.append(host_block)
-            self.eshosts = eshosts
-            if self.esuser:
-                self._es = Elasticsearch(hosts=self.eshosts, http_auth=(self.esuser, self.espass))
+            if "username" in self.conf["Elasticsearch"]:
+                self._es = Elasticsearch(
+                    hosts=eshosts, 
+                    http_auth=(
+                        self.conf["Elasticsearch"].get("username"), 
+                        self.conf["Elasticsearch"].get("password")
+                    )
+                )
             else:
-                self._es = Elasticsearch(hosts=self.eshosts)
+                self._es = Elasticsearch(hosts=eshosts)
         print("Connection: {}".format(self._es))
 
     def _parse_hosts(self, hoststring):
@@ -211,7 +231,7 @@ class ElasticTip:
             port = int(float(arr[1]))
         else:
             host = hoststring
-            port = self.esport
+            port = self.conf["Elasticsearch"].getint("port")
 
         return host, port
 
@@ -219,11 +239,11 @@ class ElasticTip:
         """Ingest IOC's into Elasticsearch"""
         tens_of_thousands = "(^[1-9]*0{4,}$|^[0-9]{2,}0{3,}$)"
 
-        print("Ingesting {} iocs from {} into {}".format(len(iocs), mod, self.eshosts))
+        print("Ingesting {} iocs from {}".format(len(iocs), mod))
         self._total_count += len(iocs)
         bulk_body = ""
         for ioc in iocs:
-            bulk_body += "{ \"update\" : { \"_index\" : \"%s\", \"_id\" : \"%s\" } }\n" % (self.index, ioc.id)
+            bulk_body += "{ \"update\" : { \"_index\" : \"%s\", \"_id\" : \"%s\" } }\n" % (self.conf["Elasticsearch"].get("index"), ioc.id)
             if intel:
                 ioc.intel["@timestamp"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
                 bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.intel)

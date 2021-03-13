@@ -1,6 +1,8 @@
 from sys import argv
 import getopt
+from os import path
 from elastic_tip import ElasticTip
+import configparser
 
 
 class CLI:
@@ -38,13 +40,48 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
             exit()
 
         try:
-            opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:P:i:c:",
-                                       ["help", "modules=", "modules-list", "es-hosts=", "es-port=", "tls", "user=", "passwd=", "index=", "ca-cert=", "no-verify"])
+            opts, args = getopt.getopt(argv[2:], "hm:e:Tu:p:P:i:c:C:",
+                                       ["help", "modules=", "modules-list", "es-hosts=", "es-port=", "tls", "user=", "passwd=", "index=", "ca-cert=", "no-verify", "config-file="])
         except getopt.GetoptError as err:
             print(err)
             exit(1)
         else:
             self._tip = ElasticTip()
+
+        # If a conf file is provided load it first
+        for opt, arg in opts:
+            if opt in ["-C", "--config-file"]:
+                self._tip.load_conf_file(arg)
+
+        # Either create a new conf or use the one from the file
+        if not self._tip.conf:
+            config = configparser.ConfigParser()
+            config["Elasticsearch"] = {
+                    "tls_verify": "True",
+                    "use_tls": "True",
+                    "setup_index": "True"
+                }
+            config["URLhaus"] = {"enabled": "False"}
+            config["MalwareBazaar"] = {"enabled": "False"}
+            config["FeodoTracker"] = {"enabled": "False"}
+            config["SSLBlacklist"] = {"enabled": "False"}
+            config["EmergingThreats-Blocklist"] = {"enabled": "False"}
+            config["ESET-MalwareIOC"] = {"enabled": "False"}
+            config["AbuseIPdb"] = {
+                    "enabled": "False",
+                    "apikey": "",
+                    "confidenceminimum": 90
+                }
+            config["Spamhaus-Drop"] = {"enabled": "False"}
+            config["Spamhaus-ExtendedDrop"] = {"enabled": "False"}
+            config["Spamhaus-IPv6Drop"] = {"enabled": "False"}
+            config["Botvrij-filenames"] = {"enabled": "False"}
+            config["Botvrij-domains"] = {"enabled": "False"}
+            config["Botvrij-destinations"] = {"enabled": "False"}
+            config["Botvrij-urls"] = {"enabled": "False"}
+        else:
+            # Load the existing one, provided commandline args will overwrite the file
+            config = self._tip.conf
 
         for opt, arg in opts:
             if opt in ["-h", "--help"]:
@@ -63,40 +100,40 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
                 exit()
                 print(self._cli_footer)
             elif opt in ["-m", "--modules"]:
+                # Build a config
                 if "*" in arg:
-                    for mod in self._tip.modules:
-                        self._tip.modules[mod]["enabled"] = True
+                    for section in config.sections():
+                        if "enabled" in section:
+                            config[section]["enabled"] = "True"
                 else:
                     for mod in arg.split(","):
                         try:
                             # Enable the module
-                            self._tip.modules["{}".format(mod)]["enabled"] = True
+                            config[mod]["enabled"] = "True"
                         except KeyError:
                             print("Module {} does not exist".format(mod))
             elif opt in ["-e", "--es-hosts"]:
-                hosts = arg.split(",")
-                for host in hosts:
-                    if "://" in host:
-                        parsedhost = host.split("://")[1]
-                    else:
-                        parsedhost = host
-                    self._tip.eshosts.append(parsedhost)
+                config["Elasticsearch"]["hosts"] = arg
             elif opt in ["-P", "--es-port"]:
-                self._tip.esport = int(float(arg))
+                config["Elasticsearch"]["port"] = arg
             elif opt in ["-u", "--user"]:
-                self._tip.esuser = arg
+                config["Elasticsearch"]["username"] = arg
             elif opt in ["-p", "--passwd"]:
-                self._tip.espass = arg
+                config["Elasticsearch"]["password"] = arg
             elif opt in ["-i", "--index"]:
-                self._tip.index = arg
+                config["Elasticsearch"]["index"] = arg
             elif opt in ["-T", "--tls"]:
-                self._tip.tls["use"] = False
+                config["Elasticsearch"]["use_tls"] = arg
             elif opt in ["-c", "--ca-cert"]:
-                self._tip.tls["cacert"] = arg
+                # make sure the file exists
+                if not path.exists(arg):
+                    raise FileNotFoundError("The provided cacert file cannot be found")
+                else:
+                    config["Elasticsearch"]["cacert"] = arg
             elif opt in ["--no-verify"]:
-                self._tip.tls["verify"] = False
+                config["Elasticsearch"]["tls_verify"] = arg
             elif opt in ["--no-setup"]:
-                self._tip.setup_index = False
+                config["Elasticsearch"]["setup_index"] = arg
 
         self._tip.run()
 
