@@ -1,12 +1,14 @@
 import json
 import re
 from datetime import datetime
+from elasticsearch import Elasticsearch
+from elasticsearch.helpers import streaming_bulk
+import tqdm
 
 from abuse_bazaar import URLhaus, MalwareBazaar, FeodoTracker, SSLBlacklist
 from emergingthreats import ETFireWallBlockIps
 from eset import EsetMalwareIOC
 from abuseipdb import AbuseIPDB
-from elasticsearch import Elasticsearch
 from spamhaus import SpamhausDrop, SpamhausExtendedDrop, SpamhausDropIpv6
 from botvrij import BotvrijFileNames, BotvrijDomains, BotvrijDstIP, BotvrijUrl
 
@@ -27,6 +29,7 @@ class ElasticTip:
         }
         self._es = None
         self._total_count = 0
+        self._ids = []
         self.modules = {
             "URLhaus": {
                 "enabled": False,
@@ -128,7 +131,6 @@ class ElasticTip:
                     if len(mod.intel) > 0:
                         self._ingest(mod.intel, module, True)
         self._es.indices.refresh(index=self.index)
-        print("Ingested a total of {} IOC's".format(self._total_count))
 
     def init_tip(self):
         """Initilize the TIP"""
@@ -221,18 +223,34 @@ class ElasticTip:
 
         print("Ingesting {} iocs from {} into {}".format(len(iocs), mod, self.eshosts))
         self._total_count += len(iocs)
-        bulk_body = ""
-        for ioc in iocs:
-            bulk_body += "{ \"update\" : { \"_index\" : \"%s\", \"_id\" : \"%s\" } }\n" % (self.index, ioc.id)
-            if intel:
-                ioc.intel["@timestamp"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-                bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.intel)
-            else:
-                bulk_body += '{ "doc_as_upsert": true, "doc": %s }\n' % json.dumps(ioc.ioc)
 
-            # Do a bulk update for every 10'th of thousands
-            if re.match(tens_of_thousands, str(iocs.index(ioc))):
-                res = self._es.bulk(body=bulk_body)
-                bulk_body = ""
-        # Ingest the last batch or if there are less as 10000 documents
-        res = self._es.bulk(body=bulk_body)
+        progress = tqdm.tqdm(unit="docs", total=self._total_count)
+        successes = 0
+        try:
+            for ok, action in streaming_bulk(
+                    client=self._es,
+                    index=self.index,
+                    actions=self._generate_es_actions(iocs),
+            ):
+                if ok:
+                    progress.update(1)
+                    successes += ok
+                else:
+                    print(ok)
+                    print(action)
+        except Exception as err:
+            print(err)
+        print("Indexed %d/%d documents" % (successes, self._total_count))
+        print("Duplicates are not counted!")
+
+    def _generate_es_actions(self, documents):
+        ids = []
+        for ioc in documents:
+            if not ioc.id in ids:
+                ids.append(ioc.id)
+                yield {
+                    "_index": self.index,
+                    "_id": ioc.id,
+                    "doc": ioc.intel,
+                    "_op_type": "index"
+                }
