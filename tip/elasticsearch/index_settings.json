@@ -3,6 +3,13 @@
     "number_of_shards": 1,
     "number_of_replicas": 1,
     "refresh_interval": "1m",
-    "max_result_window": 10000
+    "max_result_window": 10000,
+    "routing": {
+      "allocation": {
+        "include": {
+          "_tier_preference": "data_content,data_hot"
+        }
+      }
+    }
   }
 }

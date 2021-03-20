@@ -1,3 +1,4 @@
+import hashlib
 import json
 import re
 from datetime import datetime
@@ -116,6 +117,7 @@ class ElasticTip:
                 "note": None
             }
         }
+        self._total_ingested = 0
 
     def run(self):
         self._build_es_conn()
@@ -131,6 +133,9 @@ class ElasticTip:
                     if len(mod.intel) > 0:
                         self._ingest(mod.intel, module, True)
         self._es.indices.refresh(index=self.index)
+        print("=======================================")
+        print("Ingested a total of {} IOC's".format(self._total_ingested))
+        print("=======================================")
 
     def init_tip(self):
         """Initilize the TIP"""
@@ -221,10 +226,10 @@ class ElasticTip:
         """Ingest IOC's into Elasticsearch"""
         tens_of_thousands = "(^[1-9]*0{4,}$|^[0-9]{2,}0{3,}$)"
 
-        print("Ingesting {} iocs from {} into {}".format(len(iocs), mod, self.eshosts))
+        print("Ingesting {} iocs from {}".format(len(iocs), mod, self.eshosts))
         self._total_count += len(iocs)
 
-        progress = tqdm.tqdm(unit="docs", total=self._total_count)
+        progress = tqdm.tqdm(unit="docs", total=len(iocs))
         successes = 0
         try:
             for ok, action in streaming_bulk(
@@ -240,7 +245,7 @@ class ElasticTip:
                     print(action)
         except Exception as err:
             print(err)
-        print("Indexed %d/%d documents" % (successes, self._total_count))
+        print("Indexed %d/%d documents" % (successes, len(iocs)))
         print("Duplicates are not counted!")
 
     def _generate_es_actions(self, documents):
@@ -248,6 +253,7 @@ class ElasticTip:
         for ioc in documents:
             if not ioc.id in ids:
                 ids.append(ioc.id)
+                self._total_ingested += 1
                 yield {
                     "_index": self.index,
                     "_id": ioc.id,
