@@ -63,7 +63,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
                 exit()
                 print(self._cli_footer)
             elif opt in ["-m", "--modules"]:
-                if "*" in arg:
+                if arg in "all":
                     for mod in self._tip.modules:
                         self._tip.modules[mod]["enabled"] = True
                 else:
@@ -175,7 +175,7 @@ Website  https://github.com/SHolzhauer/elastic-tip"""
         print("    -u, --user <value>        Username to use for Authentication to ES")
         print("    -p, --passwd <value>      Password to use for Authentication to ES")
         print("    --modules-list            List module names and the reference link")
-        print("    -m, --modules <values>    Modules to enable (* for all):")
+        print("    -m, --modules <values>    Modules to enable (all to run all modules):")
         tip = ElasticTip()
         for mod in tip.modules:
             print("                                  {}".format(mod))
