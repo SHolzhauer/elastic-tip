@@ -47,7 +47,7 @@ Website  https://github.com/SHolzhauer/elastic-tip
 The run command can be used to run elastic-tip to gather and ingest threat intelligence into Elasticsearch index
 
 ```bash
-python tip/elastic_tip_cli.py run -e localhost -m * --tls
+python tip/elastic_tip_cli.py run -e localhost -m all --tls
 ```
 
 **Help**
