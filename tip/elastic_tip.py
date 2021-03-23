@@ -254,9 +254,9 @@ class ElasticTip:
             if not ioc.id in ids:
                 ids.append(ioc.id)
                 self._total_ingested += 1
-                yield {
-                    "_index": self.index,
-                    "_id": ioc.id,
-                    "doc": ioc.intel,
-                    "_op_type": "index"
-                }
+                doc = ioc.intel
+                doc["@timestamp"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+                doc["_index"] = self.index
+                doc["_id"] = ioc.id
+                doc["_op_type"] = "index"
+                yield doc
