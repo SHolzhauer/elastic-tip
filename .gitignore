@@ -1,4 +1,5 @@
 .idea/
 venv/
+tip_venv/
 *pyc*
 schema_proposal.md
