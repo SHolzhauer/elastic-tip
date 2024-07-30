@@ -99,8 +99,11 @@ class Intel:
                     "description": threat_description,
                 },
                 "tactic": {},
-                "technique": {}
-
+                "technique": {},
+                "feed": {
+                    "name": event_provider,
+                    "reference": event_reference
+                }
             }
         }
         self._add_type(threat_type)
